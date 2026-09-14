@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>text-to-sql sandbox</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg: #faf9f6;
+    --panel: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #5a5a54;
+    --ink-mute: #96938a;
+    --line: #e6e4dd;
+    --line-strong: #d4d2c8;
+    --accent: #7a3b2e;
+    --accent-soft: #f0e3dd;
+    --ok: #3d5a3d;
+    --ok-bg: #e9ede6;
+    --bad: #7a3b2e;
+    --bad-bg: #f5e9e5;
+}
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    line-height:1.6;
+  }
+
+  .mono{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+  }
+
+  .wrap{
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 64px 24px 120px;
+  }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+  }
+
+  h1{
+    font-size: 34px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0 0 24px;
+    max-width: 640px;
+  }
+  h1 em{
+    font-style: italic;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .lede{
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 620px;
+    margin: 0 0 12px;
+  }
+  .lede b{
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .note{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-mute);
+    margin: 24px 0 48px;
+    padding-left: 12px;
+    border-left: 2px solid var(--line-strong);
+  }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+  }
+
+  .panel-head{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-mute);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .panel-head .tag{
+    color: var(--ink);
+  }
+
+  .panel-body{
+    padding: 24px;
+  }
+
+  .cases{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .case-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    padding: 6px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .case-btn:hover{
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .case-btn.active{
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--panel);
+  }
+
+  .question-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 6px;
+  }
+  .question{
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink);
+    margin: 0 0 24px;
+    max-width: 620px;
+  }
+
+  textarea{
+    width: 100%;
+    min-height: 110px;
+    background: #ffffff;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    color: var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.6;
+    padding: 14px;
+    resize: vertical;
+  }
+  textarea:focus{
+    outline: none;
+    border-color: var(--ink);
+  }
+
+  .controls{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  button.run{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    background: var(--ink);
+    color: var(--panel);
+    border: 1px solid var(--ink);
+    padding: 10px 18px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  button.run:hover{ background: var(--accent); border-color: var(--accent); }
+  button.run:disabled{ opacity: 0.4; cursor: default; }
+
+  button.ghost{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--line-strong);
+    padding: 10px 16px;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  button.ghost:hover{ border-color: var(--ink); color: var(--ink); }
+
+  .status-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+
+  .result{
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+
+  .verdict{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    padding: 6px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .verdict.ok{ background: var(--ok-bg); color: var(--ok); }
+  .verdict.bad{ background: var(--bad-bg); color: var(--bad); }
+  .verdict.err{ background: var(--bad-bg); color: var(--bad); }
+
+  table.rows{
+    width: 100%;
+    border-collapse: collapse;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    margin-bottom: 18px;
+  }
+  table.rows th, table.rows td{
+    text-align: left;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+  }
+  table.rows th{
+    color: var(--ink-mute);
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+  }
+  .rows-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 18px 0 8px;
+  }
+
+  .stat-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-mute);
+    padding: 14px 20px;
+    border-top: 1px solid var(--line);
+  }
+
+  footer{
+    margin-top: 56px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
+  footer a{ color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line-strong); }
+  footer a:hover{ color: var(--ink); border-color: var(--ink); }
+
+  @media (max-width: 600px){
+    h1{ font-size: 26px; }
+    .wrap{ padding: 40px 18px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">TEXT-TO-SQL &middot; AWS SANDBOX</div>
+  <h1>The model writes SQL. It runs against <em>real data.</em></h1>
+  <p class="lede">
+    Qwen2.5-Coder-7B, fine-tuned with SFT then GRPO on BIRD and Spider, generating SQL against
+    six live SQLite databases it has never seen queries executed on before. Pick a case below,
+    inspect the model's candidate query, or write your own and run it against the same database.
+  </p>
+  <p class="lede">
+    Correctness is decided by <b>executing</b> the SQL and comparing the result set to a held-out
+    gold query &mdash; not by string matching. Gold SQL is never exposed by the public endpoint.
+  </p>
+
+  <div class="note" id="global-note">loading case list from the live endpoint&hellip;</div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <span>sql_sandbox &middot; <span class="tag" id="case-tag">&mdash;</span></span>
+      <span id="db-tag">&mdash;</span>
+    </div>
+    <div class="panel-body">
+
+      <div class="cases" id="case-list"></div>
+
+      <div class="question-label">question</div>
+      <p class="question" id="question-text">select a case above</p>
+
+      <div class="question-label">sql</div>
+      <textarea id="sql-input" class="mono" spellcheck="false" placeholder="SELECT ..."></textarea>
+
+      <div class="controls">
+        <button class="run" id="run-btn" disabled>run query</button>
+        <button class="ghost" id="reset-btn" disabled>reset to model output</button>
+        <span class="status-line" id="status-text"></span>
+      </div>
+
+      <div id="result-area"></div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>lambda &middot; us-east-1 &middot; query_only &middot; 8s cap</span>
+    <span id="last-run">no query run yet</span>
+  </footer>
+
+</div>
+
+<script>
+const ENDPOINT = "https://ujiumx2d4u54hbzqytfgmmlh2q0rboqv.lambda-url.us-east-1.on.aws/";
+
+let cases = [];
+let activeCase = null;
+let modelSql = "";
+
+const el = (id) => document.getElementById(id);
+
+async function loadCases(){
+  try{
+    const res = await fetch(ENDPOINT);
+    const data = await res.json();
+    cases = data.cases || [];
+    el('global-note').textContent = cases.length
+      ? `${cases.length} held-out cases loaded from the live Lambda endpoint.`
+      : "endpoint reachable but returned no cases.";
+    renderCaseList();
+    if(cases.length) selectCase(cases[0].id || cases[0].case_id);
+  }catch(err){
+    el('global-note').textContent = "could not reach the live endpoint right now. try reloading.";
+  }
+}
+
+function renderCaseList(){
+  const wrap = el('case-list');
+  wrap.innerHTML = "";
+  cases.forEach((c, i) => {
+    const id = c.id || c.case_id || `q${i+1}`;
+    const btn = document.createElement('button');
+    btn.className = 'case-btn';
+    btn.textContent = id;
+    btn.onclick = () => selectCase(id);
+    btn.dataset.id = id;
+    wrap.appendChild(btn);
+  });
+}
+
+function markActiveButton(id){
+  document.querySelectorAll('.case-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.id === id);
+  });
+}
+
+async function selectCase(id){
+  activeCase = id;
+  markActiveButton(id);
+  el('case-tag').textContent = id;
+  el('status-text').textContent = "loading case\u2026";
+  el('result-area').innerHTML = "";
+  el('run-btn').disabled = true;
+  el('reset-btn').disabled = true;
+
+  try{
+    const res = await fetch(`${ENDPOINT}?id=${id}`);
+    const data = await res.json();
+    el('question-text').textContent = data.question || "(no question text returned)";
+    el('db-tag').textContent = data.db || data.database || "";
+    modelSql = data.sql_used || "";
+    el('sql-input').value = modelSql;
+    el('status-text').textContent = "model candidate loaded \u2014 edit and run, or run as-is";
+    el('run-btn').disabled = false;
+    el('reset-btn').disabled = false;
+    renderResult(data);
+  }catch(err){
+    el('status-text').textContent = "failed to load this case.";
+  }
+}
+
+function resetToModel(){
+  el('sql-input').value = modelSql;
+}
+
+async function runQuery(){
+  const sql = el('sql-input').value.trim();
+  if(!sql){
+    el('status-text').textContent = "enter a query first.";
+    return;
+  }
+  el('run-btn').disabled = true;
+  el('status-text').textContent = "executing against SQLite\u2026";
+
+  try{
+    const res = await fetch(`${ENDPOINT}?id=${activeCase}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sql })
+    });
+    const data = await res.json();
+    renderResult(data);
+    el('status-text').textContent = "done.";
+    el('last-run').textContent = `last run \u00b7 ${new Date().toLocaleTimeString()}`;
+  }catch(err){
+    el('status-text').textContent = "request failed.";
+  }finally{
+    el('run-btn').disabled = false;
+  }
+}
+
+function renderResult(data){
+  const area = el('result-area');
+  if(!data || (data.status === undefined && data.correct === undefined)){
+    area.innerHTML = "";
+    return;
+  }
+
+  const verdictClass = data.status && data.status !== 'ok' ? 'err' : (data.correct ? 'ok' : 'bad');
+  const verdictText = data.status && data.status !== 'ok'
+    ? `error \u00b7 ${data.status}`
+    : (data.correct ? 'correct' : 'incorrect');
+
+  let html = `<div class="result">`;
+  html += `<div class="verdict ${verdictClass}">${verdictText} &middot; ${data.elapsed_ms ?? '\u2014'}ms</div>`;
+
+  if(data.predicted_rows_preview && data.predicted_rows_preview.length){
+    html += renderTable('predicted rows (preview)', data.predicted_rows_preview);
+  }
+  if(data.gold_rows_preview && data.gold_rows_preview.length){
+    html += renderTable('expected rows (preview)', data.gold_rows_preview);
+  }
+
+  html += `</div>`;
+  area.innerHTML = html;
+}
+
+function renderTable(label, rows){
+  if(!rows.length) return "";
+  const cols = Object.keys(rows[0]);
+  let t = `<div class="rows-label">${label}</div><table class="rows"><thead><tr>`;
+  cols.forEach(c => t += `<th>${escapeHtml(c)}</th>`);
+  t += `</tr></thead><tbody>`;
+  rows.slice(0, 50).forEach(r => {
+    t += `<tr>`;
+    cols.forEach(c => t += `<td>${escapeHtml(String(r[c]))}</td>`);
+    t += `</tr>`;
+  });
+  t += `</tbody></table>`;
+  return t;
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+el('run-btn').addEventListener('click', runQuery);
+el('reset-btn').addEventListener('click', resetToModel);
+
+loadCases();
+</script>
+</body>
+</html>

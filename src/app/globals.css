@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* ── Ledger tokens · ported verbatim from design-B3-ledger-live.html ── */
+@theme {
+  --color-paper: #EDF0F3;
+  --color-card:  #F7F9FA;
+  --color-ink:   #14181C;
+  --color-rule:  #C9D2DA;
+  --color-hair:  #DDE3E8;
+  --color-note:  #7A8794;
+  --color-faint: #A6B1BC;
+  --color-accent: #1B3A5C;   /* the only accent */
+  --color-fail:  #8C3B2E;    /* state only, never decoration */
+  --color-ok:    #3F6B44;    /* state only, never decoration */
+
+  /* body/secondary text tones used throughout B3 */
+  --color-body: #39434D;
+  --color-mute: #4C5762;
+  --color-hover: #E7ECF0;
+  --color-tail: #BCC5CE;
+
+  --spacing-side: 252px;     /* fixed sidebar */
+  --spacing-col:  710px;     /* content column max */
+  --spacing-text: 710px;   /* shared measure: headings and prose align on the same right edge */
+  --ease-ledger: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@theme inline {
+  --font-serif: var(--font-spectral), Georgia, serif;
+  --font-mono:  var(--font-jetbrains), ui-monospace, monospace;
+}
+
+/* ── base ── */
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  font-weight: 300;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── keyframes · sidebar log tail ── */
+@theme {
+  --animate-blip: blip 2.4s ease-in-out infinite;
+  --animate-tailin: tailin 0.5s ease forwards;
+
+  @keyframes blip {
+    0%, 100% { opacity: 0.25; }
+    50%      { opacity: 1; }
+  }
+
+  @keyframes tailin {
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tail-line] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── orchestrated page load · one sequence, then finished ── */
+@theme {
+  --animate-rise: rise 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+}
