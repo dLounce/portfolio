@@ -51,7 +51,7 @@ const VARIANTS: Variant[] = [
 
 function Mark({ on, label }: { on: boolean; label: string }) {
   return (
-    <span className="mr-[6px] inline-flex items-center gap-[5px] border border-rule px-[6px] py-[2px] font-mono text-[9px] tracking-[0.1em] text-note uppercase">
+    <span className="mr-[6px] inline-flex items-center gap-[5px] border border-rule px-[6px] py-[2px] font-mono text-[10.5px] tracking-[0.1em] text-note uppercase">
       <span className={on ? "text-ok" : "text-fail"}>{on ? "✓" : "✗"}</span>
       {label}
     </span>
@@ -83,6 +83,11 @@ export default function SentinelPanel() {
   useEffect(() => {
     const el = panelRef.current;
     if (!el) return;
+    // a missing browser API must never hide the evidence: show everything.
+    if (typeof IntersectionObserver === "undefined") {
+      queueMicrotask(play);
+      return;
+    }
     const obs = new IntersectionObserver(
       (entries, o) =>
         entries.forEach((e) => {
@@ -106,7 +111,7 @@ export default function SentinelPanel() {
         <style>{`[data-abl-row]{opacity:1!important;transform:none!important}`}</style>
       </noscript>
 
-      <div className="flex items-center justify-between gap-3 border-b border-rule px-[15px] py-[11px] font-mono text-[10.5px] text-note">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-rule px-[15px] py-[11px] font-mono text-[12px] text-note">
         <span>
           <b className="font-medium text-mute">architecture ablation</b> · one payload, four variants
         </span>
@@ -142,7 +147,7 @@ export default function SentinelPanel() {
 
             <span
               className={[
-                "whitespace-nowrap font-mono text-[11px]",
+                "whitespace-nowrap font-mono text-[12px]",
                 v.held ? "font-medium text-ok" : "text-fail",
                 "max-[900px]:col-span-2 max-[900px]:col-start-2 max-[900px]:mt-[10px]",
               ].join(" ")}
@@ -155,15 +160,15 @@ export default function SentinelPanel() {
       </div>
 
       <div className="border-b border-hair bg-card px-[15px] py-[13px]">
-        <p className="font-mono text-[11px] leading-[1.8] text-body">
+        <p className="font-mono text-[12px] leading-[1.8] text-body">
           Live models, defended architecture, 100 attacks across 10 families.{" "}
-          <b className="font-medium text-accent">12</b> changed how the Buyer reasoned, past the
+          <b className="font-medium text-accent">12</b> shifted the Buyer&apos;s decision past the
           noise threshold. <b className="font-medium text-accent">0</b> produced an unauthorised
           action or a policy violation.
         </p>
       </div>
 
-      <div className="flex items-center justify-between gap-3 px-[15px] py-[9px] font-mono text-[10px] text-faint">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-[15px] py-[9px] font-mono text-[11.5px] text-faint">
         <span>
           3 of 25 deterministic cells produced an unauthorised order, all of them in S0 to S2. S3
           came out clean in the matrix and across all 100 live runs.

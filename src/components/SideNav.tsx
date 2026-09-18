@@ -7,6 +7,7 @@ const NAV = [
   { href: "/#sentinel", label: "Sentinel", paths: ["M12 3l8 3v6c0 4.9-3.4 8-8 9-4.6-1-8-4.1-8-9V6z", "M9 12l2 2 4-4"] },
   { href: "/#projects", label: "Projects", paths: ["M3 7h18v13H3z", "M8 7V4h8v3"] },
   { href: "/#thesis", label: "Thesis", paths: ["M4 4h11l5 5v11H4z", "M15 4v5h5"] },
+  { href: "/#experience", label: "Experience", paths: ["M3 8h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1z", "M8 8V6a2 2 0 012-2h4a2 2 0 012 2v2"] },
   { href: "/#contact", label: "Contact", paths: ["M3 6h18v12H3z", "M3 7l9 6 9-6"] },
 ];
 
@@ -40,10 +41,10 @@ export default function SideNav() {
           <a
             key={item.href}
             href={item.href}
-            aria-current={on ? "true" : undefined}
+            aria-current={on ? "location" : undefined}
             className={[
               "flex items-center gap-[10px] rounded-[5px] px-[11px] py-2",
-              "font-mono text-[11.5px] no-underline transition-colors duration-150",
+              "font-mono text-[12.5px] no-underline transition-colors duration-150",
               on ? "bg-ink text-card" : "text-mute hover:bg-hover hover:text-ink",
             ].join(" ")}
           >

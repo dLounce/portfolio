@@ -33,11 +33,15 @@ function Cell({ v, sig, strong }: { v: string; sig: boolean; strong?: boolean })
 export default function ThesisTable() {
   return (
     <div>
-      <table className="w-full border-collapse font-mono text-[12px]">
+      <div className="overflow-x-auto">
+      <table className="w-full min-w-[460px] border-collapse font-mono text-[12px]">
+        <caption className="mb-[10px] text-left font-mono text-[11px] tracking-[0.12em] text-note uppercase">
+          KD-TIES merge results against baseline · MMLU, HellaSwag, GSM8K, sign conflict
+        </caption>
         <thead>
           <tr>
             {HEAD.map((h) => (
-              <th key={h} className="border-b border-rule pr-3 pb-[9px] text-left font-medium text-[9.5px] tracking-[0.12em] text-note uppercase">
+              <th key={h} scope="col" className="border-b border-rule pr-3 pb-[9px] text-left font-medium text-[11px] tracking-[0.12em] text-note uppercase">
                 {h}
               </th>
             ))}
@@ -57,8 +61,9 @@ export default function ThesisTable() {
           ))}
         </tbody>
       </table>
+      </div>
 
-      <p className="mt-[11px] font-mono text-[10px] leading-[1.85] text-note">
+      <p className="mt-[11px] font-mono text-[11.5px] leading-[1.85] text-note">
         ★ = significantly different from baseline (diff &gt; 2×SE). SC-TIES gains 0.716 against a
         0.713 baseline, which is <b className="font-medium text-ink">not</b> significant. The
         significant result is +0.017 over SM-TIES, cross-method. Every merge variant loses GSM8K

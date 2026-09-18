@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Guard against launch placeholders
+        run: |
+          set -e
+          if grep -rn "TODO(rishav)" src/; then echo "::error::TODO(rishav) left in source"; exit 1; fi
+          if grep -rn 'href="#"' src/; then echo "::error::dead href=\"#\" left in source"; exit 1; fi
+          echo "no placeholders found"
+      - name: Build
+        run: npm run build

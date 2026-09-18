@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import ProjectShell, { H2, P, Note, Facts } from "@/components/ProjectShell";
+import ProjectShell, { H2, P, Facts } from "@/components/ProjectShell";
+import AgreementBars from "@/components/art/AgreementBars";
 
 export const metadata: Metadata = {
   title: "LLM quiz grader, Ballistic Learning Systems — Rishav Raj",
@@ -11,34 +12,45 @@ export default function Ballistic() {
   return (
     <ProjectShell
       eyebrow="Ballistic Learning Systems · AI Intern · Jun–Jul 2025"
-      title="There is no correct mark for a short answer, only the one a human would have given."
-      lede="A quiz chatbot that marks free-text answers. It was scored against 118 items that human graders had labelled first, because a rubric score on its own is easy to claim and hard to defend."
+      title="The test was not whether the grader was right, but whether it agreed with the humans who marked first."
+      lede="A quiz chatbot that marks free-text answers, scored against 118 items human graders had labelled first. Prompt and retrieval changes raised agreement with those graders from 44% to 71%."
       repo={null}
     >
       <Facts
         rows={[
           ["Stack", "OpenAI API · LangChain · Pinecone · MySQL"],
           ["Benchmark", "118 human-labelled items"],
-          ["Agreement with graders", "71%"],
-          ["Improvement over baseline", "+26.9 points"],
+          ["Agreement with graders", "71.0%"],
+          ["Baseline agreement", "44.1%"],
+          ["Improvement", "+26.9 points"],
           ["Retrieval", "RAG over PDFs, embedded into Pinecone"],
         ]}
       />
 
       <H2>Agreement, not accuracy</H2>
       <P>
-        A short-answer mark has no ground truth behind it. Calling the number accuracy would imply a
-        correctness the task does not have. Agreement against a labelled set sounds weaker and
-        leaves the 29% disagreement in plain sight.
+        There is a reference set &mdash; 118 answers that human graders marked first &mdash; but
+        agreeing with those graders is not the same as being universally right. Short answers are
+        judgement calls, and the graders themselves would not agree with each other on every item.
+        So I report agreement with the human labels, which keeps the 29% disagreement in plain sight,
+        rather than calling the number accuracy.
       </P>
 
-      <H2>What broke</H2>
-      <Note>
-        TODO(rishav) — required by §6. This was your first industry role, so the useful version is
-        not a technical postmortem. It is what you got wrong about working on someone else&apos;s
-        production system and what you do differently now. 118 items is also a small benchmark. If
-        you would build it larger or differently today, say so.
-      </Note>
+      <AgreementBars />
+
+      <H2>What I&apos;d measure differently</H2>
+      <P>
+        118 items is a small benchmark, and it leans on one set of human labels. It has no
+        inter-rater agreement to say how much the graders agreed with each other, no held-out set
+        kept aside while I tuned the prompts, and no confidence interval on the 71%. A stronger
+        version would use several graders per answer, report their agreement as a ceiling, develop
+        the prompt on one split and measure on another, and put an interval around the result.
+      </P>
+      <P>
+        The jump from 44% to 71% came from prompt and retrieval changes made together. I did not
+        measure the two independently, so I cannot say how much of the gain was the prompt and how
+        much was the retrieval. That separation is the first thing I would run again.
+      </P>
     </ProjectShell>
   );
 }

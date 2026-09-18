@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ProjectShell, { H2, P, Note, Facts } from "@/components/ProjectShell";
 import SentinelPanel from "@/components/SentinelPanel";
+import SentinelDiagram from "@/components/art/SentinelDiagram";
 
 export const metadata: Metadata = {
   title: "Sentinel Procurement — Rishav Raj",
@@ -47,10 +48,13 @@ export default function Sentinel() {
         scenario, supplied independently of vendor responses, and never derived from vendor text.
       </P>
 
+      <SentinelDiagram />
+
       <H2>Where the models sit</H2>
       <P>
-        The Buyer and the Vendors are genuinely model-driven, which is the only reason the result
-        means anything. The Buyer runs a small LangGraph loop over the round&apos;s validated offers
+        The Buyer and the Vendors are model-driven in the live runs; the deterministic matrix puts
+        scripted doubles in their place. The live result matters because the thing under attack is a
+        real model, not a stand-in. The Buyer runs a small LangGraph loop over the round&apos;s validated offers
         and emits a structured BuyerDecision: accept, counter, reject, or walk_away. It never calls
         place_order. The authorisation layer decides independently what is allowed, so a confused or
         compromised Buyer has nothing to talk its way past.
@@ -74,8 +78,10 @@ export default function Sentinel() {
 
       <H2>Twelve out of a hundred</H2>
       <P>
-        In the live runs, twelve attacks shifted the Buyer&apos;s reasoning-level decision past the
-        benign noise band. In the sense that mattered to the model, they worked. None became an
+        In the live runs, twelve attacks shifted the Buyer&apos;s structured decision past the benign
+        noise band. That decision is the BuyerDecision label it emits &mdash; accept, counter, reject
+        or walk_away &mdash; not any hidden chain of thought, which the harness never reads. In the
+        sense that mattered to the model, they worked. None became an
         unauthorised action or a policy violation, because the layer that authorises is not the
         layer that was persuaded.
       </P>
@@ -121,10 +127,6 @@ export default function Sentinel() {
         Both bugs moved the numbers in the flattering direction, which is the direction you are
         least likely to go looking in.
       </P>
-      <Note>
-        TODO(rishav) — finish this in your own words. A reader will want to know which of the two
-        you found first and what made you go looking.
-      </Note>
 
       <H2>What it does not claim</H2>
       <P>

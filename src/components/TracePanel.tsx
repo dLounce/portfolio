@@ -52,6 +52,11 @@ export default function TracePanel() {
   useEffect(() => {
     const el = panelRef.current;
     if (!el) return;
+    // a missing browser API must never hide the evidence: show everything.
+    if (typeof IntersectionObserver === "undefined") {
+      queueMicrotask(play);
+      return;
+    }
     const obs = new IntersectionObserver(
       (entries, o) =>
         entries.forEach((e) => {
@@ -77,14 +82,14 @@ export default function TracePanel() {
         <style>{`[data-trace-row]{opacity:1!important;transform:none!important}
           [data-trace-diff]{max-height:120px!important;margin:0 15px 13px!important}`}</style>
       </noscript>
-      <div className="flex items-center justify-between border-b border-rule px-[15px] py-[11px] font-mono text-[10.5px] text-note">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-b border-rule px-[15px] py-[11px] font-mono text-[12px] text-note">
         <span>
           <b className="font-medium text-mute">repair_agent_fix</b> · BPI 2020 Request for Payment · recorded run
         </span>
         <span>bounded · 5 iterations / 60s</span>
       </div>
 
-      <div className="font-mono text-[11.5px]">
+      <div className="font-mono text-[12.5px]">
         {STEPS.map((s, i) => (
           <div key={s.n}>
             <div
@@ -97,7 +102,7 @@ export default function TracePanel() {
             >
               <span className="text-faint">{s.n}</span>
               <span className={`text-center ${KIND_CLASS[s.kind]}`}>{s.glyph}</span>
-              <span className={KIND_CLASS[s.kind]}>{s.text}</span>
+              <span className={`min-w-0 [overflow-wrap:anywhere] ${KIND_CLASS[s.kind]}`}>{s.text}</span>
             </div>
 
             {i === DIFF_AFTER && (
@@ -108,7 +113,7 @@ export default function TracePanel() {
                   diffOpen ? "mt-0 mb-[13px] max-h-[120px]" : "my-0 max-h-0",
                 ].join(" ")}
               >
-                <pre className="border-l-2 border-accent bg-paper px-[13px] py-[11px] font-mono text-[11px] leading-[1.75] text-mute">
+                <pre className="border-l-2 border-accent bg-paper px-[13px] py-[11px] font-mono text-[12px] leading-[1.75] text-mute">
                   <span className="text-fail">-   result = _stub_n0_submitted_by_employee(stat)</span>
                   {"\n"}
                   <span className="text-ok">+   result = _stub_n0_submitted_by_employee(state)</span>
@@ -119,7 +124,7 @@ export default function TracePanel() {
         ))}
       </div>
 
-      <div className="flex justify-between border-t border-hair px-[15px] py-[9px] font-mono text-[10px] text-faint">
+      <div className="flex flex-wrap justify-between gap-x-3 gap-y-2 border-t border-hair px-[15px] py-[9px] font-mono text-[11.5px] text-faint">
         <span>1 failure · 1 patch · 0 retries · patch_code replaces the whole function, AST-validated before write</span>
         <button type="button" onClick={play} className="cursor-pointer border-0 bg-transparent text-accent underline">
           replay ↻

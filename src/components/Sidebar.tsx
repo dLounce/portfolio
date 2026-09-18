@@ -1,26 +1,14 @@
-import LogTail from "./LogTail";
 import SideNav from "./SideNav";
 
-// hoisted to module scope: a new array literal each render would retrigger
-// LogTail's effect on every re-render and reseed the log.
-//
-// TODO(rishav): these name real mechanisms from sentinel-procurement (the
-// guards, the extraction flags, the control/treatment/A-A' method) but they
-// are not lines captured from an actual run. Swap in real ones from
-// eval/results/ before launch. The previous version of this tail streamed
-// BPI 2017 loan activity names under a payment narrative, which is the
-// mistake worth not repeating.
-const TAIL_LINES = [
-  "control · vendor messages recorded",
-  "treatment · payload injected r3",
-  "interpreter · extraction_flag=tiered",
-  "schema_validate · VendorOffer ok",
-  "buyer · decision=counter",
-  "price_policy · below floor · REJECT",
-  "budget_guard · pass",
-  "A/A′ · within noise band",
-  "place_order · gated · no order",
-  "attack-not-reached · unscored",
+// static, verified results. no animation, no live dot, no generated
+// timestamps: the previous tail stamped the visitor's own clock onto lines
+// that were never captured from a real run, which read as a live feed it
+// was not.
+const PROOF: [string, string][] = [
+  ["0 / 100", "unauthorised orders · sentinel live attacks"],
+  ["66.0%", "deployed text-to-SQL execution accuracy"],
+  ["4.4 GB", "served model, from ~15 GB"],
+  ["~12 s", "single request · EC2 CPU"],
 ];
 
 const SOCIAL = [
@@ -42,8 +30,8 @@ const SOCIAL = [
   },
   {
     label: "Curriculum vitae",
-    href: "#", // TODO(rishav): point at the real CV PDF
-    external: false,
+    href: "/resume/Rishav_Resume.pdf",
+    external: true,
     paths: ["M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4", "M7 10l5 5 5-5", "M12 15V3"],
     circles: [],
   },
@@ -67,15 +55,22 @@ export default function Sidebar() {
           <div className="text-[17px] leading-[1.2] font-bold tracking-[-0.012em]">
             Rishav Raj
           </div>
-          <div className="mt-0.5 font-mono text-[10px] tracking-[0.09em] text-note uppercase">
-            AI · Agent Engineer
+          <div className="mt-0.5 font-mono text-[11.5px] tracking-[0.09em] text-note uppercase">
+            AI · ML Engineer
           </div>
         </div>
       </div>
 
+      {/* desktop hides the Connect block below, so mobile needs its own actions */}
+      <div className="mt-3 hidden gap-4 font-mono text-[12px] max-[900px]:flex">
+        <a href="/resume/Rishav_Resume.pdf" target="_blank" rel="noreferrer" className="text-accent no-underline">Résumé ↗</a>
+        <a href="https://github.com/dLounce" target="_blank" rel="noreferrer" className="text-accent no-underline">GitHub ↗</a>
+        <a href="mailto:rrishavrraj@gmail.com" className="text-accent no-underline">Email</a>
+      </div>
+
       <SideNav />
 
-      <div className="mt-6 mb-2 ml-[11px] font-mono text-[9.5px] tracking-[0.15em] text-faint uppercase max-[900px]:hidden">
+      <div className="mt-6 mb-2 ml-[11px] font-mono text-[11px] tracking-[0.15em] text-faint uppercase max-[900px]:hidden">
         Connect
       </div>
       <div className="max-[900px]:hidden">
@@ -84,7 +79,7 @@ export default function Sidebar() {
             key={s.label}
             href={s.href}
             {...(s.external ? { target: "_blank", rel: "noreferrer" } : {})}
-            className="flex items-center gap-[10px] px-[11px] py-[5px] font-mono text-[11px] text-note no-underline hover:text-accent"
+            className="flex items-center gap-[10px] px-[11px] py-[5px] font-mono text-[12px] text-note no-underline hover:text-accent"
           >
             <svg
               viewBox="0 0 24 24"
@@ -105,7 +100,21 @@ export default function Sidebar() {
       </div>
 
       <div className="mt-auto max-[900px]:hidden">
-        <LogTail lines={TAIL_LINES} />
+        <div className="border-t border-rule pt-3">
+          <div className="mb-[9px] font-mono text-[10.5px] tracking-[0.14em] text-faint uppercase">
+            verified results
+          </div>
+          <dl className="flex flex-col gap-[8px]">
+            {PROOF.map(([v, k]) => (
+              <div key={k} className="grid grid-cols-[auto_1fr] items-baseline gap-x-[10px]">
+                <dt className="font-mono text-[14px] text-ink tabular-nums">{v}</dt>
+                <dd className="font-mono text-[10.5px] leading-[1.4] tracking-[0.04em] text-note uppercase">
+                  {k}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
     </aside>
   );

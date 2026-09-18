@@ -7,8 +7,8 @@
   --color-ink:   #14181C;
   --color-rule:  #C9D2DA;
   --color-hair:  #DDE3E8;
-  --color-note:  #7A8794;
-  --color-faint: #A6B1BC;
+  --color-note:  #59636F;   /* darkened for WCAG AA (~5.3:1 on paper) */
+  --color-faint: #646E7B;   /* darkened for WCAG AA (~4.9:1 on paper) */
   --color-accent: #1B3A5C;   /* the only accent */
   --color-fail:  #8C3B2E;    /* state only, never decoration */
   --color-ok:    #3F6B44;    /* state only, never decoration */
@@ -43,11 +43,36 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation: none !important;
     transition: none !important;
   }
 }
+
+/* ── keyboard focus + skip link ── */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -48px;
+  z-index: 50;
+  background: var(--color-ink);
+  color: var(--color-card);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  transition: top 0.15s ease;
+}
+.skip-link:focus { top: 8px; }
 
 /* ── keyframes · sidebar log tail ── */
 @theme {

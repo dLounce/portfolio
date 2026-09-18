@@ -2,12 +2,37 @@ import Sidebar from "@/components/Sidebar";
 import SentinelPanel from "@/components/SentinelPanel";
 import ProjectCards from "@/components/ProjectCards";
 import ThesisTable from "@/components/ThesisTable";
+import ThesisGeometry from "@/components/art/ThesisGeometry";
+import { SITE_URL } from "./site";
+
+const PERSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Rishav Raj",
+  jobTitle: "AI / ML Engineer",
+  url: SITE_URL,
+  email: "mailto:rrishavrraj@gmail.com",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Patna",
+    addressRegion: "Bihar",
+    addressCountry: "IN",
+  },
+  alumniOf: { "@type": "CollegeOrUniversity", name: "Central University of Rajasthan" },
+  sameAs: ["https://github.com/dLounce", "https://linkedin.com/in/ris7av"],
+};
 
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_LD) }}
+      />
       <Sidebar />
       <main
+        id="main"
+        tabIndex={-1}
         className={[
           "ml-side px-[46px] max-[900px]:ml-0 max-[900px]:px-[22px]",
           "[&>*]:mx-auto [&>*]:max-w-col max-[900px]:[&>*]:max-w-none",
@@ -18,29 +43,41 @@ export default function Home() {
       >
         <section id="intro">
           <h1 className="animate-rise max-w-[18ch] text-[clamp(32px,4.6vw,52px)] leading-[1.13] font-light tracking-[-0.018em] [animation-delay:50ms]">
-            I build LLM systems that can be lied to and still <em className="font-bold italic">refuse</em>.
+            I train LLMs, deploy them, and test where they <em className="font-bold italic">fail</em>.
           </h1>
 
-          {/* ---------------------------------------------------------------
-              TODO(rishav) — HANDOVER §9.3. Written from the
-              sentinel-procurement README, so it is factual, but it is not
-              your voice yet. Replace the first sentence with what you
-              actually remember about building it.
-             --------------------------------------------------------------- */}
-
           <p className="animate-rise mt-[26px] max-w-text text-[18px] text-body [animation-delay:130ms]">
-            My last project was a procurement system where two agents negotiate with vendors and
-            neither one is allowed to authorise a purchase. Then I ran a hundred prompt-injection
-            attacks at it. Twelve of them changed how the buying agent reasoned. None produced an
-            order.
+            I fine-tuned a 7B text-to-SQL model on execution reward, quantized it from about 15 GB
+            down to 4.4 GB, and served it on a CPU instance that returns a query in about twelve
+            seconds.
           </p>
 
           <p className="animate-rise mt-[15px] max-w-text text-[18px] text-body [animation-delay:210ms]">
-            Most of what I build is measurement: a red-team harness with a control group in it, a
-            SQL model post-trained on execution reward and scored against 21 databases it had never
-            seen, a thesis whose main finding is that the method I set out to use doesn&apos;t work.
-            Each of those started with a number I didn&apos;t like.
+            The rest of my work is testing where these systems fail. I built a procurement agent
+            where the part that reads untrusted vendor text has no way to place an order, then ran a
+            hundred prompt-injection attacks at it: twelve measurably shifted the buyer&apos;s
+            decision, none produced an order. My M.Sc. thesis is a negative result &mdash; the
+            merging method I set out to use collapsed into plain averaging. Each of those started
+            with a number I didn&apos;t like.
           </p>
+
+          <dl className="animate-rise mt-9 grid max-w-text grid-cols-2 gap-x-8 gap-y-5 border-t border-rule pt-6 min-[560px]:grid-cols-4 [animation-delay:250ms]">
+            {[
+              ["66.0%", "deployed text-to-SQL execution accuracy"],
+              ["4.4 GB", "served model, down from ~15 GB"],
+              ["~12 s", "one measured request · EC2 CPU"],
+              ["0 / 100", "unauthorised orders · 100 live attacks"],
+            ].map(([v, k]) => (
+              <div key={k}>
+                <dt className="font-mono text-[22px] font-light tracking-[-0.01em] text-ink tabular-nums">
+                  {v}
+                </dt>
+                <dd className="mt-1 font-mono text-[12px] leading-[1.5] tracking-[0.04em] text-note uppercase">
+                  {k}
+                </dd>
+              </div>
+            ))}
+          </dl>
 
           <a href="#sentinel" className="animate-rise mt-8 inline-block border-b border-accent pb-1 font-mono text-[12px] text-accent no-underline [animation-delay:290ms]">
             What happens when you remove the controls ↓
@@ -49,7 +86,7 @@ export default function Home() {
 
 
         <section id="sentinel">
-          <div className="mb-[15px] font-mono text-[10px] tracking-[0.16em] text-note uppercase">
+          <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             Sentinel Procurement · adversarial evaluation
           </div>
           <h2 className="mb-[9px] max-w-text text-[26px] font-light tracking-[-0.012em]">
@@ -71,7 +108,7 @@ export default function Home() {
 
           <SentinelPanel />
 
-          <p className="mt-[15px] font-mono text-[10.5px] leading-[1.85] text-note">
+          <p className="mt-[15px] font-mono text-[12px] leading-[1.85] text-note">
             Every cell is a matched pair. The control records the vendor&apos;s real messages, the
             treatment replays them with only the attack payload added, and a second control replay
             sets the threshold an effect has to clear. These are observed rates from completed
@@ -80,14 +117,19 @@ export default function Home() {
         </section>
 
         <section id="projects">
-          <div className="mb-[26px] font-mono text-[10px] tracking-[0.16em] text-note uppercase">
+          <div className="mb-[26px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             Projects
           </div>
           <ProjectCards />
+
+          <p className="mt-[24px] max-w-text font-mono text-[12px] leading-[1.9] text-note">
+            Stack – Python · PyTorch · Hugging Face · PEFT/LoRA · TRL/GRPO · LangGraph ·
+            FastAPI · llama.cpp · AWS EC2 · MLflow · CloudWatch · PM4Py · Docker · SQL
+          </p>
         </section>
 
         <section id="thesis">
-          <div className="mb-[15px] font-mono text-[10px] tracking-[0.16em] text-note uppercase">
+          <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             KD-TIES · M.Sc. thesis, June 2026
           </div>
           <h2 className="mb-[9px] max-w-text text-[26px] font-light tracking-[-0.012em]">
@@ -108,27 +150,70 @@ export default function Home() {
             back to 0.237. OP-TIES projects out the shared top-16 subspace.
           </p>
 
+          <ThesisGeometry />
+
           <ThesisTable />
 
-          <p className="mt-[26px] max-w-text font-mono text-[10.5px] leading-[1.85] text-note">
+          <p className="mt-[26px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
             What I&apos;d do differently: I measured sign conflict only after the merge failed to
             help. Instrumented from the first run, the diagnosis would have taken days instead of
             weeks. I was watching the benchmark score when the zero was the louder signal.
           </p>
         </section>
 
+        <section id="experience">
+          <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
+            Experience &amp; education
+          </div>
+          <dl className="max-w-text">
+            {[
+              {
+                role: "Artificial Intelligence Intern",
+                org: "Ballistic Learning Systems",
+                when: "Jun–Jul 2025",
+                note: "Built an LLM short-answer grader and raised agreement with human graders from 44% to 71% on a 118-item benchmark.",
+              },
+              {
+                role: "M.Sc. Computer Science",
+                org: "Central University of Rajasthan",
+                when: "Jun 2026",
+                note: "CGPA 7.1/10. Thesis on task-vector merging under distillation (KD-TIES).",
+              },
+              {
+                role: "BCA",
+                org: "Patliputra University",
+                when: "2021",
+                note: "73%.",
+              },
+            ].map((r, i) => (
+              <div
+                key={r.role}
+                className={`grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-1 border-b border-hair py-[13px] ${i === 0 ? "border-t border-t-rule" : ""}`}
+              >
+                <dt className="text-[16px] text-ink">{r.role}</dt>
+                <span className="text-right font-mono text-[11.5px] tracking-[0.08em] text-note uppercase">
+                  {r.when}
+                </span>
+                <dd className="col-span-2 text-[14px] text-mute">
+                  <span className="text-body">{r.org}</span> – {r.note}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
         <section id="contact">
-          <div className="mb-[15px] font-mono text-[10px] tracking-[0.16em] text-note uppercase">
+          <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             Contact
           </div>
           <h2 className="mb-[9px] max-w-text text-[26px] font-light tracking-[-0.012em]">
-            If you&apos;re hiring someone to make agents <em className="font-bold italic">survive</em> production,
-            I&apos;d like to hear about it.
+            If you&apos;re hiring for LLM deployment, evaluation, or <em className="font-bold italic">agent
+            systems</em>, I&apos;d like to hear about it.
           </h2>
           <p className="mb-[32px] max-w-text text-[17px] text-mute">
-            AI or agent engineering: post-training, LLM systems, agent security. I finished my
-            M.Sc. in June 2026, I&apos;m available now, and I&apos;ll relocate. Email or LinkedIn
-            both reach me.
+            I&apos;m looking for AI/ML engineering roles in LLM deployment, evaluation, or agent
+            systems. I finished my M.Sc. in June 2026, I&apos;m based in Patna and open to
+            relocation, and available now. Email or LinkedIn both reach me.
           </p>
 
           <dl>
@@ -136,6 +221,7 @@ export default function Home() {
               { k: "Email", v: "rrishavrraj@gmail.com", href: "mailto:rrishavrraj@gmail.com" },
               { k: "LinkedIn", v: "linkedin.com/in/ris7av", href: "https://linkedin.com/in/ris7av" },
               { k: "GitHub", v: "github.com/dLounce", href: "https://github.com/dLounce" },
+              { k: "Résumé", v: "Rishav_Resume.pdf", href: "/resume/Rishav_Resume.pdf" },
               { k: "Phone", v: "+91 97983 41208", href: "tel:+919798341208" },
               { k: "Based in", v: "Patna, Bihar, India", href: null },
             ].map((row, i) => (
@@ -143,10 +229,10 @@ export default function Home() {
                 key={row.k}
                 className={`grid grid-cols-[96px_1fr] items-baseline gap-4 border-b border-hair py-[11px] ${i === 0 ? "border-t border-t-rule" : ""}`}
               >
-                <dt className="font-mono text-[9.5px] tracking-[0.12em] text-note uppercase">{row.k}</dt>
-                <dd className="font-mono text-[12.5px]">
+                <dt className="font-mono text-[11px] tracking-[0.12em] text-note uppercase">{row.k}</dt>
+                <dd className="font-mono text-[12.5px] [overflow-wrap:anywhere]">
                   {row.href ? (
-                    <a href={row.href} {...(row.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})} className="text-accent no-underline hover:underline">
+                    <a href={row.href} {...(row.href.startsWith("http") || row.href.endsWith(".pdf") ? { target: "_blank", rel: "noreferrer" } : {})} className="text-accent no-underline hover:underline">
                       {row.v}
                     </a>
                   ) : (
@@ -157,10 +243,6 @@ export default function Home() {
             ))}
           </dl>
 
-          <p className="mt-[38px] font-mono text-[10.5px] leading-[1.85] text-note">
-            Currently shipping: the Text-to-SQL demo on this site, a write-up of the KD-TIES
-            negative result, MCP tool-calling at agent runtime in Log2Agent.
-          </p>
         </section>
       </main>
     </>

@@ -28,9 +28,19 @@ type Project = {
 
 const PROJECTS: Project[] = [
   {
+    slug: "text-to-sql",
+    title: "Text-to-SQL: SFT then GRPO",
+    hook: "Fine-tuned Qwen2.5-Coder-7B on execution reward, quantized it to a 4.4 GB GGUF, and served it on a CPU instance. Execution accuracy 50.6 to 68.4 on 21 unseen databases; the deployed model holds 66.0.",
+    badge: "Deployed",
+    tags: ["TRL/GRPO", "llama.cpp", "AWS EC2"],
+    href: "/work/text-to-sql",
+    repo: "https://github.com/dLounce/Text-to-SQL",
+    image: text2sql,
+  },
+  {
     slug: "sentinel",
     title: "Sentinel Procurement",
-    hook: "A hundred prompt-injection attacks run at a procurement agent. Twelve changed how it reasoned and none produced an order, because the model is not what authorises orders.",
+    hook: "A hundred prompt-injection attacks run at a procurement agent. Twelve shifted its decision and none produced an order, because the model is not what authorises orders.",
     badge: "Security eval",
     tags: ["LangGraph", "Prompt injection", "Red team"],
     href: "/work/sentinel",
@@ -40,7 +50,7 @@ const PROJECTS: Project[] = [
   {
     slug: "log2agent",
     title: "Log2Agent",
-    hook: "Mines 36,796 real events, ranks what is worth automating, then writes the LangGraph agent that does it. When the generated code breaks it reads the traceback and patches itself.",
+    hook: "Mined 36,796 process events, generated a LangGraph workflow, and matched historical routing in 50 of 50 replayed cases. The business APIs stay mocked and runtime MCP calls are the next gap.",
     badge: "Recorded run",
     tags: ["PM4Py", "LangGraph", "MCP"],
     href: "/work/log2agent",
@@ -48,19 +58,9 @@ const PROJECTS: Project[] = [
     image: log2agent,
   },
   {
-    slug: "text-to-sql",
-    title: "Text-to-SQL: SFT then GRPO",
-    hook: "Rewarded by running the SQL rather than by a reward model. Execution accuracy went 50.6 to 68.4 across 21 databases it had never seen: 85.9 on Spider, 55.1 on BIRD.",
-    badge: "Write-up",
-    tags: ["TRL", "vLLM", "LoRA"],
-    href: "/work/text-to-sql",
-    repo: "https://github.com/dLounce/Text-to-SQL",
-    image: text2sql,
-  },
-  {
     slug: "dgm4",
     title: "Multimodal deepfake detection",
-    hook: "Trains 1% of 432M parameters, then points at which words in a caption were manipulated and which pixels were edited.",
+    hook: "Trains 1% of 432M parameters, then names which caption words were manipulated and localises the altered face region.",
     badge: "Write-up",
     tags: ["CLIP ViT-L", "LoRA", "LLaVA"],
     href: "/work/dgm4",
@@ -70,7 +70,7 @@ const PROJECTS: Project[] = [
   {
     slug: "ballistic",
     title: "LLM quiz grader at Ballistic Learning",
-    hook: "Graded short answers against a 118-item human-labelled benchmark. Agreed with the human graders 71% of the time, 26.9 points above baseline.",
+    hook: "Raised agreement with human graders from 44% to 71% on a 118-item labelled benchmark, and reported it as agreement rather than accuracy.",
     badge: "Internship · 2025",
     tags: ["LangChain", "Pinecone", "RAG"],
     href: "/work/ballistic",
@@ -97,7 +97,7 @@ export default function ProjectCards() {
               card with neither an image nor a drawing shows a label rather than a
               grey void. */}
           <div className="relative grid aspect-[16/10] place-items-center overflow-hidden border-b border-rule bg-paper">
-            <span className="font-mono text-[10px] tracking-[0.14em] text-faint uppercase">
+            <span className="font-mono text-[11.5px] tracking-[0.14em] text-faint uppercase">
               {p.slug}
             </span>
             {p.image ? (
@@ -124,7 +124,7 @@ export default function ProjectCards() {
                   {p.title}
                 </a>
               </h3>
-              <span className="shrink-0 font-mono text-[9px] tracking-[0.12em] text-note uppercase">
+              <span className="shrink-0 font-mono text-[10.5px] tracking-[0.12em] text-note uppercase">
                 {p.badge}
               </span>
             </div>
@@ -136,7 +136,7 @@ export default function ProjectCards() {
                 {p.tags.map((t) => (
                   <span
                     key={t}
-                    className="mr-[6px] border border-rule px-[6px] py-[2px] font-mono text-[9px] tracking-[0.1em] text-note uppercase"
+                    className="mr-[6px] border border-rule px-[6px] py-[2px] font-mono text-[10.5px] tracking-[0.1em] text-note uppercase"
                   >
                     {t}
                   </span>
@@ -148,7 +148,7 @@ export default function ProjectCards() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={`${p.title} on GitHub`}
-                  className="relative z-10 shrink-0 text-note transition-colors hover:text-accent"
+                  className="relative z-10 -m-1 shrink-0 p-1 text-note transition-colors hover:text-accent"
                 >
                   <svg
                     viewBox="0 0 24 24"

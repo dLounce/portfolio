@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ProjectShell, { H2, P, Note, Facts, Shot } from "@/components/ProjectShell";
+import ProjectShell, { H2, P, Note, Facts } from "@/components/ProjectShell";
 import TracePanel from "@/components/TracePanel";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export default function Log2Agent() {
     <ProjectShell
       eyebrow="Log2Agent · May–Jul 2026"
       title="It reads how a process actually runs, then writes the agent that automates it."
-      lede="Most agent projects fail because someone picked the wrong thing to automate and had no evidence it worked. Log2Agent picks the target from mined event data instead of opinion, and scores the result by replaying real history instead of a demo prompt."
+      lede="Rather than guess what to automate, Log2Agent mines an event log to pick the target, then grades the generated agent by replaying real cases against what actually happened."
       repo="https://github.com/dLounce/log2agent"
     >
       <Facts
@@ -46,11 +46,6 @@ export default function Log2Agent() {
         compared against what actually happened.
       </P>
 
-      <Shot
-        src="/log2agent/cover.png"
-        caption="The mined directly-follows graph, reconstructed from the raw event log rather than drawn from a process document. That is the point. The real process contains paths nobody wrote down."
-      />
-
       <H2>The repair loop</H2>
       <P>
         If generated code fails its smoke test, a bounded ReAct agent debugs it with four tools:
@@ -66,7 +61,7 @@ export default function Log2Agent() {
 
       <div className="my-[26px]">
         <TracePanel />
-        <p className="mt-[9px] font-mono text-[10px] leading-[1.7] text-note">
+        <p className="mt-[9px] font-mono text-[11.5px] leading-[1.7] text-note">
           Nine events captured from a real run: smoke test fails, traceback read, broken function
           read, one patch applied, smoke test passes. Recorded rather than live: I chose not to
           expose arbitrary code execution to anonymous visitors.

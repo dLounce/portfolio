@@ -6,7 +6,7 @@ export function Shot({ src, caption }: { src: string; caption: string }) {
   return (
     <figure className="my-[26px]">
       <div className="relative grid aspect-[16/9] place-items-center overflow-hidden rounded-[6px] border border-rule bg-paper">
-        <span className="px-4 font-mono text-[10px] tracking-[0.14em] text-faint uppercase">
+        <span className="px-4 font-mono text-[11.5px] tracking-[0.14em] text-faint uppercase">
           {src.split("/").pop()}
         </span>
         {/* background layer, not <img>: a missing file paints nothing at all,
@@ -18,7 +18,7 @@ export function Shot({ src, caption }: { src: string; caption: string }) {
           style={{ backgroundImage: `url(${src})` }}
         />
       </div>
-      <figcaption className="mt-[9px] font-mono text-[10px] leading-[1.7] text-note">
+      <figcaption className="mt-[9px] font-mono text-[11.5px] leading-[1.7] text-note">
         {caption}
       </figcaption>
     </figure>
@@ -39,7 +39,7 @@ export function P({ children }: { children: React.ReactNode }) {
 
 export function Note({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-[15px] max-w-text font-mono text-[10.5px] leading-[1.85] text-note">
+    <p className="mt-[15px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
       {children}
     </p>
   );
@@ -55,7 +55,7 @@ export function Facts({ rows }: { rows: [string, string][] }) {
             i === 0 ? "border-t border-t-rule" : ""
           }`}
         >
-          <dt className="font-mono text-[9.5px] tracking-[0.12em] text-note uppercase">{k}</dt>
+          <dt className="font-mono text-[11px] tracking-[0.12em] text-note uppercase">{k}</dt>
           <dd className="font-mono text-[12px] text-body">{v}</dd>
         </div>
       ))}
@@ -79,13 +79,13 @@ export default function ProjectShell({
   return (
     <>
       <Sidebar />
-      <main className="ml-side px-[46px] pt-[60px] pb-[100px] max-[900px]:ml-0 max-[900px]:px-[22px] [&>*]:mx-auto [&>*]:max-w-col max-[900px]:[&>*]:max-w-none">
+      <main id="main" tabIndex={-1} className="ml-side px-[46px] pt-[60px] pb-[100px] max-[900px]:ml-0 max-[900px]:px-[22px] [&>*]:mx-auto [&>*]:max-w-col max-[900px]:[&>*]:max-w-none">
         <div>
-          <Link href="/#projects" className="font-mono text-[11px] text-accent no-underline hover:underline">
+          <Link href="/#projects" className="font-mono text-[12px] text-accent no-underline hover:underline">
             ← All projects
           </Link>
 
-          <div className="mt-[34px] mb-[15px] font-mono text-[10px] tracking-[0.16em] text-note uppercase">
+          <div className="mt-[34px] mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             {eyebrow}
           </div>
           <h1 className="max-w-text text-[clamp(28px,3.4vw,40px)] leading-[1.16] font-light tracking-[-0.018em]">
@@ -105,6 +105,12 @@ export default function ProjectShell({
           )}
 
           {children}
+
+          <div className="mt-[52px] border-t border-rule pt-[22px]">
+            <Link href="/#projects" className="font-mono text-[12px] text-accent no-underline hover:underline">
+              ← All projects
+            </Link>
+          </div>
         </div>
       </main>
     </>

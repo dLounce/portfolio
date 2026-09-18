@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rishav Raj — portfolio
 
-## Getting Started
+Personal portfolio and project write-ups for Rishav Raj, an AI/ML engineer working on LLM
+post-training, deployment, evaluation, and agent systems.
 
-First, run the development server:
+Live: set the final alias/domain in `src/app/site.ts`.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Next.js 16 (App Router) · React 19 · TypeScript
+- Tailwind CSS v4 — theme tokens live in `src/app/globals.css` (no `tailwind.config`)
+- Self-hosted Spectral + JetBrains Mono via `next/font`
+- Deployed on Vercel
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/` — home: intro + proof strip, Sentinel panel, projects, thesis, experience, contact
+- `/work/text-to-sql` — SFT then GRPO post-training and CPU (GGUF) deployment
+- `/work/sentinel` — privilege-separated procurement agent + adversarial evaluation
+- `/work/log2agent` — process mining → generated LangGraph agent with a repair loop
+- `/work/dgm4` — multimodal image–text manipulation detection
+- `/work/ballistic` — LLM short-answer grader (internship)
+- `/sql-demo.html` — standalone Text-to-SQL sandbox (static page; calls a query-only AWS Lambda)
 
-## Learn More
+## Local setup
 
-To learn more about Next.js, take a look at the following resources:
+    npm install
+    npm run dev      # http://localhost:3000
+    npm run lint
+    npm run build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Content & data sources
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Project metrics are transcribed from each project's own repository and saved evaluation output;
+  the numbers here are meant to match those sources and the CV exactly.
+- Résumé PDF is served from `public/resume/Rishav_Resume.pdf`.
+- Card images live in `src/Assets/` (optimized by `next/image`); other static assets in `public/`.
+- The SQL demo calls a query-only AWS Lambda and degrades gracefully if the endpoint is cold.
 
-## Deploy on Vercel
+## Configuration
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `src/app/site.ts` — public origin used by the canonical URL, Open Graph tags, `robots.ts`,
+  and `sitemap.ts`. Update it when the domain is final.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+Deployed on Vercel from the default branch.

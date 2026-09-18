@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ProjectShell, { H2, P, Note, Facts } from "@/components/ProjectShell";
+import ProjectShell, { H2, P, Facts } from "@/components/ProjectShell";
 
 export const metadata: Metadata = {
   title: "Multimodal deepfake detection (DGM4) — Rishav Raj",
@@ -11,18 +11,18 @@ export default function DGM4() {
   return (
     <ProjectShell
       eyebrow="DGM4 · Dec 2025–Feb 2026"
-      title="It points at the edited region and names the altered words."
-      lede="Real or fake is the easy half. This model also localises the manipulated part of the image and identifies which caption tokens were changed, with one percent of the parameters trained."
+      title="It flags the manipulated face region and names the altered words."
+      lede="Real or fake is the easy half. This model also localises the manipulated face as a bounding box and identifies which caption tokens were changed, with one percent of the parameters trained."
       repo="https://github.com/dLounce/dgm4-multimodal-detection"
     >
       <Facts
         rows={[
           ["Architecture", "CLIP ViT-L + LoRA · LLaVA-7B · PyTorch"],
           ["Data", "208K image–caption pairs"],
-          ["Trained parameters", "4.3M of 432M (1%)"],
+          ["Trained parameters", "4.3M of 432M (1%) · LoRA + heads"],
           ["Detection", "0.965 AUC · 0.903 accuracy"],
           ["Manipulation type", "0.911 mAP"],
-          ["Face localisation", "0.892 mIoU"],
+          ["Face localisation", "0.892 mIoU · face bounding box"],
           ["Manipulated words", "0.831 F1"],
           ["Frozen-CLIP baseline", "0.862 AUC · 0.724 accuracy"],
         ]}
@@ -42,13 +42,15 @@ export default function DGM4() {
         what makes token-level and box-level localisation possible instead of one real/fake logit.
       </P>
 
-      <H2>What broke</H2>
-      <Note>
-        TODO(rishav) — required by §6, and it has to be yours. Worth considering: 0.965 AUC against
-        0.831 F1 on manipulated words is a wide gap, and a reader will ask why word-level grounding
-        is the weakest head. If you know the answer, that paragraph is the most interesting thing on
-        this page.
-      </Note>
+      <H2>The weakest head, stated as an open question</H2>
+      <P>
+        Word-level grounding is the weakest of the three heads: 0.831 F1 on manipulated words against
+        0.965 detection AUC. Detection only has to call the pair fake; naming the exact altered
+        tokens is a harder, sparser target, with few positive tokens per caption. I do not have an
+        experiment that isolates the cause &mdash; token imbalance, the capacity given to that head,
+        or the cross-attention resolution are all candidates &mdash; so I record it as an open
+        limitation rather than explain it after the fact.
+      </P>
     </ProjectShell>
   );
 }
