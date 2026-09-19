@@ -303,6 +303,38 @@
     gold query &mdash; not by string matching. Gold SQL is never exposed by the public endpoint.
   </p>
 
+  <div class="eyebrow" style="margin-top:0">LIVE MODEL &middot; ASK IT SOMETHING</div>
+  <p class="lede">
+    This box talks to the actual deployed model &mdash; the same GGUF checkpoint scored in the
+    case study &mdash; running on a CPU EC2 instance that's only kept on during the day to control
+    cost. It only knows one small world-geography database: countries and their capitals, cities
+    and population, independence dates, notable mountains, and international organizations and
+    where they're headquartered. Ask it something in that space.
+  </p>
+
+  <div class="panel" id="live-panel">
+    <div class="panel-head">
+      <span>live_generate &middot; <span class="tag">world-geography db</span></span>
+      <span id="live-status-tag">idle</span>
+    </div>
+    <div class="panel-body">
+      <div class="question-label">your question</div>
+      <textarea id="live-question" class="mono" maxlength="240" placeholder="e.g. Which city is the European Bank for Reconstruction and Development headquartered in?"></textarea>
+      <div class="controls">
+        <button class="run" id="live-ask-btn">ask the model</button>
+        <span class="status-line" id="live-char-count">0 / 240</span>
+      </div>
+      <div class="status-line" id="live-status-line" style="margin-top:10px;"></div>
+      <div id="live-result-area"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    If the model is asleep &mdash; it runs on a day schedule to control cost, not continuously
+    &mdash; you'll see a real recorded example instead of a live result, labeled as recorded, not
+    live. This box also has its own request budget, separate from the case sandbox below.
+  </div>
+
   <div class="note" id="global-note">loading case list from the live endpoint&hellip;</div>
 
   <div class="panel">
@@ -482,8 +514,120 @@ function escapeHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+// --- live NL -> SQL generation panel ---------------------------------
+// Calls this site's own /api/generate-sql (a server-side proxy in front of
+// the real EC2 model, with rate limiting and an offline fallback). The
+// generated SQL is then executed against the real database through the
+// same Lambda used above, reusing a fixed case id purely to route to the
+// right SQLite file. The Lambda's "correct" verdict on that case is
+// relative to THAT case's own gold question, not this new one, so it is
+// deliberately not shown here.
+const GEN_ENDPOINT = "/api/generate-sql";
+const LIVE_DEMO_CASE_ID = "q2";
+const RECORDED_EXAMPLE = {
+  question: "In which city is the European Bank for Reconstruction and Development's headquarters?",
+  sql: "SELECT City, Province\nFROM organization\nWHERE Name = 'European Bank for Reconstruction and Development';",
+  rows: [{ City: "London", Province: "Greater London" }]
+};
+
+let liveCooldownUntil = 0;
+
+function updateLiveCharCount(){
+  el('live-char-count').textContent = `${el('live-question').value.length} / 240`;
+}
+
+function showRecordedExample(reasonText){
+  el('live-status-tag').textContent = 'asleep · recorded example';
+  el('live-status-line').textContent = reasonText;
+  let html = `<div class="result">`;
+  html += `<div class="question-label" style="margin-top:14px;">recorded question</div>`;
+  html += `<p class="question" style="font-size:15px;">${escapeHtml(RECORDED_EXAMPLE.question)}</p>`;
+  html += `<div class="question-label">sql the model generated (recorded, not live)</div>`;
+  html += `<textarea class="mono" readonly style="min-height:92px;">${escapeHtml(RECORDED_EXAMPLE.sql)}</textarea>`;
+  html += renderTable('result (recorded)', RECORDED_EXAMPLE.rows);
+  html += `</div>`;
+  el('live-result-area').innerHTML = html;
+}
+
+async function askModel(){
+  const question = el('live-question').value.trim();
+  if(!question){
+    el('live-status-line').textContent = "type a question first.";
+    return;
+  }
+  if(Date.now() < liveCooldownUntil){
+    const wait = Math.ceil((liveCooldownUntil - Date.now())/1000);
+    el('live-status-line').textContent = `please wait ${wait}s before asking again.`;
+    return;
+  }
+
+  el('live-ask-btn').disabled = true;
+  el('live-status-tag').textContent = 'thinking…';
+  el('live-status-line').textContent = "asking the deployed model — it runs on a CPU instance, usually 10–15 seconds.";
+  el('live-result-area').innerHTML = "";
+
+  try{
+    const res = await fetch(GEN_ENDPOINT, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ question })
+    });
+    const data = await res.json();
+
+    if(data.status === 'offline'){
+      showRecordedExample("The model is asleep right now (it runs on a day schedule to control cost). Here's a real recorded example instead:");
+      return;
+    }
+    if(data.status === 'rate_limited'){
+      el('live-status-tag').textContent = 'rate limited';
+      el('live-status-line').textContent = data.scope === 'daily'
+        ? "this demo has hit its request budget for today — try again tomorrow."
+        : "too many requests in a short window — wait a few minutes and try again.";
+      return;
+    }
+    if(data.status !== 'ok'){
+      el('live-status-tag').textContent = 'error';
+      el('live-status-line').textContent = "something went wrong reaching the model. try again in a moment.";
+      return;
+    }
+
+    el('live-status-tag').textContent = `live · ${data.latencyMs ?? '—'}ms`;
+    el('live-status-line').textContent = "generated. running it against the database…";
+
+    let html = `<div class="result">`;
+    html += `<div class="question-label" style="margin-top:14px;">sql the model generated</div>`;
+    html += `<textarea class="mono" readonly style="min-height:92px;">${escapeHtml(data.sql)}</textarea>`;
+    el('live-result-area').innerHTML = html;
+
+    const execRes = await fetch(`${ENDPOINT}?id=${LIVE_DEMO_CASE_ID}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ sql: data.sql })
+    });
+    const execData = await execRes.json();
+
+    if(execData.status && execData.status !== 'ok'){
+      html += `<div class="verdict err">query error · ${escapeHtml(String(execData.status))}</div>`;
+    } else if(execData.predicted_rows_preview && execData.predicted_rows_preview.length){
+      html += renderTable('result', execData.predicted_rows_preview);
+    } else {
+      html += `<div class="status-line">query ran, no rows returned.</div>`;
+    }
+    el('live-result-area').innerHTML = html;
+    el('live-status-line').textContent = "done.";
+    liveCooldownUntil = Date.now() + 20000;
+  }catch(err){
+    el('live-status-tag').textContent = 'error';
+    el('live-status-line').textContent = "request failed. try again in a moment.";
+  }finally{
+    el('live-ask-btn').disabled = false;
+  }
+}
+
 el('run-btn').addEventListener('click', runQuery);
 el('reset-btn').addEventListener('click', resetToModel);
+el('live-ask-btn').addEventListener('click', askModel);
+el('live-question').addEventListener('input', updateLiveCharCount);
 
 loadCases();
 </script>

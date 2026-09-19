@@ -197,9 +197,19 @@ export default function TextToSQL() {
         sent to the browser.
       </P>
       <P>
-        Execution runs server-side in a query-only AWS Lambda with an 8-second cap. This SQL sandbox
+        The same page also has a box that talks to the deployed model itself: type a question about
+        a small world-geography database &mdash; countries, capitals, mountains, cities, and the
+        organizations headquartered in them &mdash; and it is sent live to the EC2 endpoint, generates
+        SQL in real time, and runs it against the real database. That EC2 instance only runs during
+        the day to control cost, so outside those hours the box shows a real recorded example instead
+        of a live call, labeled as recorded rather than pretending to be live. Both boxes are
+        rate-limited server-side.
+      </P>
+      <P>
+        Execution runs server-side in a query-only AWS Lambda with an 8-second cap. That sandbox
         is a separate service from the EC2 endpoint that generates the SQL &mdash; one runs queries,
-        the other runs the model.
+        the other runs the model, and the live box above is the only path that calls the model
+        itself.
       </P>
       <a
         href="/sql-demo.html"
