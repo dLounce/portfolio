@@ -318,12 +318,15 @@
       <span id="live-status-tag">idle</span>
     </div>
     <div class="panel-body">
-      <div class="question-label">try one, or ask your own</div>
-      <div class="cases" id="live-examples">
-        <button type="button" class="case-btn" data-q="Which city is the European Bank for Reconstruction and Development headquartered in?">EBRD headquarters?</button>
-        <button type="button" class="case-btn" data-q="How many people live in the capital of the country that became independent on August 15, 1947?">1947-independence capital population?</button>
-        <button type="button" class="case-btn" data-q="Which mountains are located in Costa Rica?">Mountains in Costa Rica?</button>
+      <div class="question-label">not sure what's in here? peek at a table</div>
+      <div class="cases" id="table-peek-buttons">
+        <button type="button" class="case-btn" data-table="country">country</button>
+        <button type="button" class="case-btn" data-table="city">city</button>
+        <button type="button" class="case-btn" data-table="organization">organization</button>
+        <button type="button" class="case-btn" data-table="politics">politics</button>
+        <button type="button" class="case-btn" data-table="geo_mountain">geo_mountain</button>
       </div>
+      <div id="table-peek-area"></div>
 
       <div class="question-label">your question</div>
       <textarea id="live-question" class="mono" maxlength="240" placeholder="e.g. Which city is the European Bank for Reconstruction and Development headquartered in?"></textarea>
@@ -635,12 +638,35 @@ el('run-btn').addEventListener('click', runQuery);
 el('reset-btn').addEventListener('click', resetToModel);
 el('live-ask-btn').addEventListener('click', askModel);
 el('live-question').addEventListener('input', updateLiveCharCount);
-document.querySelectorAll('#live-examples .case-btn').forEach(btn => {
+
+async function peekTable(table){
+  const area = el('table-peek-area');
+  area.innerHTML = `<div class="status-line" style="margin:10px 0;">loading ${escapeHtml(table)}…</div>`;
+  try{
+    const res = await fetch(`${ENDPOINT}?id=${LIVE_DEMO_CASE_ID}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ sql: `SELECT * FROM ${table} LIMIT 5;` })
+    });
+    const data = await res.json();
+    if(data.status && data.status !== 'ok'){
+      area.innerHTML = `<div class="verdict err" style="margin-top:10px;">could not load ${escapeHtml(table)} · ${escapeHtml(String(data.status))}</div>`;
+      return;
+    }
+    if(data.predicted_rows_preview && data.predicted_rows_preview.length){
+      area.innerHTML = `<div style="margin-top:10px;">${renderTable(`${table} · first 5 rows`, data.predicted_rows_preview)}</div>`;
+    } else {
+      area.innerHTML = `<div class="status-line" style="margin:10px 0;">no rows returned.</div>`;
+    }
+  }catch(err){
+    area.innerHTML = `<div class="verdict err" style="margin-top:10px;">request failed — try again.</div>`;
+  }
+}
+
+document.querySelectorAll('#table-peek-buttons .case-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    el('live-question').value = btn.dataset.q;
-    updateLiveCharCount();
-    el('live-question').focus();
-    el('live-status-line').textContent = "example filled in — edit it or hit “ask the model” as-is.";
+    document.querySelectorAll('#table-peek-buttons .case-btn').forEach(b => b.classList.toggle('active', b === btn));
+    peekTable(btn.dataset.table);
   });
 });
 
