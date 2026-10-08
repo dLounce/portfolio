@@ -35,7 +35,7 @@ Live: https://ris7av.vercel.app (the origin is set in `src/app/site.ts`).
 
 - Project metrics are transcribed from each project's own repository and saved evaluation output;
   the numbers here are meant to match those sources and the CV exactly.
-- Résumé PDF is served from `public/resume/Rishav_Resume.pdf`.
+- Résumé PDF is served from `public/resume/CV_Rishav.pdf`.
 - Card images live in `src/Assets/` (optimized by `next/image`); other static assets in `public/`.
 - The SQL demo calls a query-only AWS Lambda and degrades gracefully if the endpoint is cold.
 - The free-text box on the same page calls `/api/generate-sql` (`src/app/api/generate-sql/route.ts`),

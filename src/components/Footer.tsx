@@ -2,7 +2,7 @@ const LINKS = [
   { label: "Email", href: "mailto:rrishavrraj@gmail.com", ext: false },
   { label: "LinkedIn", href: "https://linkedin.com/in/ris7av", ext: true },
   { label: "GitHub", href: "https://github.com/dLounce", ext: true },
-  { label: "Résumé", href: "/resume/Rishav_Resume.pdf", ext: true },
+  { label: "Résumé", href: "/resume/CV_Rishav.pdf", ext: true },
 ];
 
 export default function Footer() {

@@ -242,7 +242,7 @@ export default function Home() {
               { k: "Email", v: "rrishavrraj@gmail.com", href: "mailto:rrishavrraj@gmail.com" },
               { k: "LinkedIn", v: "linkedin.com/in/ris7av", href: "https://linkedin.com/in/ris7av" },
               { k: "GitHub", v: "github.com/dLounce", href: "https://github.com/dLounce" },
-              { k: "Résumé", v: "Rishav_Resume.pdf", href: "/resume/Rishav_Resume.pdf" },
+              { k: "Résumé", v: "CV_Rishav.pdf", href: "/resume/CV_Rishav.pdf" },
               { k: "Phone", v: "+91 97983 41208", href: "tel:+919798341208" },
               { k: "Based in", v: "Delhi, India", href: null },
             ].map((row, i) => (

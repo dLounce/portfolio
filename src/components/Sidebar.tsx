@@ -30,7 +30,7 @@ const SOCIAL = [
   },
   {
     label: "Curriculum vitae",
-    href: "/resume/Rishav_Resume.pdf",
+    href: "/resume/CV_Rishav.pdf",
     external: true,
     paths: ["M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4", "M7 10l5 5 5-5", "M12 15V3"],
     circles: [],
@@ -63,7 +63,7 @@ export default function Sidebar() {
 
       {/* desktop hides the Connect block below, so mobile needs its own actions */}
       <div className="mt-3 hidden gap-4 font-mono text-[12px] max-[900px]:flex">
-        <a href="/resume/Rishav_Resume.pdf" target="_blank" rel="noreferrer" className="text-accent no-underline">Résumé ↗</a>
+        <a href="/resume/CV_Rishav.pdf" target="_blank" rel="noreferrer" className="text-accent no-underline">Résumé ↗</a>
         <a href="https://github.com/dLounce" target="_blank" rel="noreferrer" className="text-accent no-underline">GitHub ↗</a>
         <a href="mailto:rrishavrraj@gmail.com" className="text-accent no-underline">Email</a>
       </div>
