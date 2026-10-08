@@ -133,9 +133,16 @@ export default function Home() {
             KD-TIES · M.Sc. thesis, Dec 2025–Jun 2026
           </div>
           <h2 className="mb-[9px] max-w-text text-[26px] font-light tracking-[-0.012em]">
-            TIES merging quietly degenerates to <em className="font-bold italic">averaging</em>.
-            This is the geometry that causes it.
+            In my setup, TIES merging quietly turned into{" "}
+            <em className="font-bold italic">averaging</em>. This is the geometry behind it.
           </h2>
+          <p className="mb-[15px] max-w-text text-[17px] text-mute">
+            TIES is a way to merge fine-tuned adapters into one model. It keeps the largest 70% of
+            each adapter&apos;s changes, picks one sign per weight by adding the changes together,
+            and averages only the changes that agree with that sign. Sign conflict is how often a
+            change points against the sign that gets picked. At zero, the election never overrules
+            anything.
+          </p>
           <p className="mb-[15px] max-w-text text-[17px] text-mute">
             Distilling Qwen2.5-32B into 7B, then merging the LoRA adapters, I expected TIES sign
             election to resolve conflicts between an instruction adapter and a maths adapter. It
@@ -155,9 +162,23 @@ export default function Home() {
           <ThesisTable />
 
           <p className="mt-[26px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
+            Limits: this is one model family, a Qwen2.5-32B teacher and a 7B student, with two
+            domains, 5,000 samples each and one epoch of training. I didn&apos;t test other model
+            families, sizes or training lengths.
+          </p>
+
+          <p className="mt-[12px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
             What I&apos;d do differently: I measured sign conflict only after the merge failed to
             help. Instrumented from the first run, the diagnosis would have taken days instead of
             weeks. I was watching the benchmark score when the zero was the louder signal.
+          </p>
+
+          <p className="mt-[12px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
+            Notebooks and figures are in the{" "}
+            <a href="https://github.com/dLounce/KD-ties" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">KD-ties repo</a>,
+            and the four trained adapters are on{" "}
+            <a href="https://www.kaggle.com/datasets/rrishavrraj/all-new-lora" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">Kaggle</a>.
+            The thesis PDF is available on request.
           </p>
         </section>
 

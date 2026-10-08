@@ -64,6 +64,13 @@ export default function ThesisTable() {
       </div>
 
       <p className="mt-[11px] font-mono text-[11.5px] leading-[1.85] text-note">
+        SM: adapters trained on Qwen2.5-7B-Instruct. CM: adapters trained on the 7B base model and
+        measured against that base. Avg: plain averaging instead of TIES. CMAM: TIES over both CM
+        adapters and the instruction-tuning shift itself. Baseline is Qwen2.5-7B-Instruct with no
+        adapters.
+      </p>
+
+      <p className="mt-[8px] font-mono text-[11.5px] leading-[1.85] text-note">
         ★ = significantly different from baseline (diff &gt; 2×SE). SC-TIES gains 0.716 against a
         0.713 baseline, which is <b className="font-medium text-ink">not</b> significant. The
         significant result is +0.017 over SM-TIES, cross-method. Every merge variant loses GSM8K
