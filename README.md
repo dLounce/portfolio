@@ -20,6 +20,7 @@ Live: https://ris7av.vercel.app (the origin is set in `src/app/site.ts`).
 - `/work/log2agent` — process mining → generated LangGraph agent with a repair loop
 - `/work/dgm4` — multimodal image–text manipulation detection
 - `/work/ballistic` — LLM short-answer grader (internship)
+- `/work/kd-ties` — M.Sc. thesis: TIES merging of distilled LoRA adapters
 - `/sql-demo.html` — standalone Text-to-SQL sandbox (static page): a case-picker calling a
   query-only AWS Lambda, plus a free-text box that calls this app's own `/api/generate-sql`
   route, which proxies to the live EC2 generation endpoint

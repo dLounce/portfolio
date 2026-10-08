@@ -1,9 +1,8 @@
+import Link from "next/link";
 import Sidebar from "@/components/Sidebar";
 import SentinelPanel from "@/components/SentinelPanel";
 import ProjectCards from "@/components/ProjectCards";
-import ThesisTable from "@/components/ThesisTable";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
-import ThesisGeometry from "@/components/art/ThesisGeometry";
 import { SITE_URL } from "./site";
 
 const PERSON_LD = {
@@ -137,68 +136,50 @@ export default function Home() {
           <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             KD-TIES · M.Sc. thesis, Dec 2025–Jun 2026
           </div>
-          <h2 className="mb-[9px] max-w-text text-[26px] font-light tracking-[-0.012em]">
+          <h2 className="mb-[13px] max-w-text text-[26px] font-light tracking-[-0.012em]">
             In my setup, TIES merging quietly turned into{" "}
-            <em className="font-bold italic">averaging</em>. This is the geometry behind it.
+            <em className="font-bold italic">averaging</em>.
           </h2>
-          <p className="mb-[15px] max-w-text text-[17px] text-mute">
-            TIES is a way to merge fine-tuned adapters into one model. It keeps the largest 70% of
-            each adapter&apos;s changes, picks one sign per weight by adding the changes together,
-            and averages only the changes that agree with that sign. Sign conflict is how often a
-            change points against the sign that gets picked. At zero, the election never overrules
-            anything.
-          </p>
-          <p className="mb-[15px] max-w-text text-[17px] text-mute">
-            Distilling Qwen2.5-32B into 7B, then merging the LoRA adapters, I expected TIES sign
-            election to resolve conflicts between an instruction adapter and a maths adapter. It
-            resolved nothing. Sign conflict measured 0.000.
-          </p>
-          <p className="mb-[26px] max-w-text text-[17px] text-mute">
-            A cross-manifold task vector{" "}
-            <span className="font-mono text-[14px]">τ = θ_LoRA_on_target − θ_base</span> carries the
-            whole instruct-tuning shift inside it. That anchor dwarfs the LoRA signal, so both
-            vectors point almost the same way and TIES has nothing left to arbitrate. SC-TIES
-            subtracts the anchor, merges the residuals, then restores it, bringing sign conflict
-            back to 0.237. OP-TIES projects out the shared top-16 subspace.
+          <p className="max-w-text text-[17px] text-mute">
+            I distilled Qwen2.5-32B into LoRA adapters for a 7B model, one for instruction
+            following and one for maths, then merged them with TIES, a method that settles
+            disagreements between adapters by electing one sign per weight. It settled nothing. Both
+            adapters carried the same instruction-tuning shift, so sign conflict was 0.000 and the
+            merge was plain averaging.
           </p>
 
-          <ThesisGeometry />
+          <dl className="mt-[26px] grid max-w-text grid-cols-1 gap-x-8 gap-y-5 border-t border-rule pt-6 min-[640px]:grid-cols-3">
+            {[
+              ["0.000", "sign conflict, adapters trained on the base model"],
+              ["0.237", "sign conflict after removing the shared shift"],
+              ["+0.017", "MMLU for SC-TIES over SM-TIES, the only significant gain between methods"],
+            ].map(([v, k]) => (
+              <div key={v}>
+                <dt className="font-mono text-[22px] font-light tracking-[-0.01em] text-ink tabular-nums">
+                  {v}
+                </dt>
+                <dd className="mt-1 font-mono text-[12px] leading-[1.5] tracking-[0.04em] text-note uppercase">
+                  {k}
+                </dd>
+              </div>
+            ))}
+          </dl>
 
-          <ThesisTable />
-
-          <div className="mt-[40px] grid max-w-text gap-x-[40px] gap-y-[28px] border-t border-rule pt-[28px] min-[760px]:grid-cols-2">
-            <div>
-              <h3 className="mb-[9px] font-mono text-[12px] tracking-[0.16em] text-note uppercase">
-                Limits
-              </h3>
-              <p className="text-[15.5px] leading-[1.65] text-mute">
-                This is one model family: a Qwen2.5-32B teacher and a 7B student, two domains, 5,000
-                samples each and one epoch of training. I didn&apos;t test other model families,
-                sizes or training lengths.
-              </p>
-            </div>
-            <div>
-              <h3 className="mb-[9px] font-mono text-[12px] tracking-[0.16em] text-note uppercase">
-                What I&apos;d do differently
-              </h3>
-              <p className="text-[15.5px] leading-[1.65] text-mute">
-                I measured sign conflict only after the merge failed to help. Instrumented from the
-                first run, the diagnosis would have taken days instead of weeks. I was watching the
-                benchmark score when the zero was the louder signal.
-              </p>
-            </div>
-            <div className="min-[760px]:col-span-2">
-              <h3 className="mb-[9px] font-mono text-[12px] tracking-[0.16em] text-note uppercase">
-                Code and data
-              </h3>
-              <p className="text-[15.5px] leading-[1.65] text-mute">
-                Notebooks and figures are in the{" "}
-                <a href="https://github.com/dLounce/KD-ties" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">KD-ties repo</a>,
-                and the four trained adapters are on{" "}
-                <a href="https://www.kaggle.com/datasets/rrishavrraj/all-new-lora" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">Kaggle</a>.
-                The thesis PDF is available on request.
-              </p>
-            </div>
+          <div className="mt-[28px] flex flex-wrap items-baseline gap-x-6 gap-y-3 font-mono text-[12px]">
+            <Link
+              href="/work/kd-ties"
+              className="border-b border-accent pb-1 text-accent no-underline"
+            >
+              Read the full write-up →
+            </Link>
+            <a
+              href="https://github.com/dLounce/KD-ties"
+              target="_blank"
+              rel="noreferrer"
+              className="text-accent no-underline hover:underline"
+            >
+              Source on GitHub ↗
+            </a>
           </div>
         </section>
 

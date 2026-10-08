@@ -42,7 +42,7 @@ const GROUPS: { label: string; entries: Entry[] }[] = [
         place: "Ajmer",
         when: "Jul 2024–Jun 2026",
         note: "CGPA 7.1/10. Thesis on task-vector merging under distillation, supervised by Dr. Gaurav Meena.",
-        link: { label: "Jump to the thesis", href: "#thesis" },
+        link: { label: "Read the thesis write-up", href: "/work/kd-ties" },
       },
       {
         role: "Bachelor of Computer Applications",

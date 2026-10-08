@@ -8,6 +8,7 @@ const ROUTES = [
   "/work/log2agent",
   "/work/dgm4",
   "/work/ballistic",
+  "/work/kd-ties",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
