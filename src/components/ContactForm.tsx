@@ -115,7 +115,7 @@ export default function ContactForm() {
           Thanks, {sentTo.name.split(" ")[0]}.
         </p>
         <p className="mt-[8px] max-w-[52ch] text-[16.5px] text-mute">
-          Your message is in my inbox. I&apos;ll reply to{" "}
+          Your message is in my inbox. I&apos;ll reply to you at{" "}
           <span className="font-mono text-[14.5px] [overflow-wrap:anywhere] text-body">
             {sentTo.email}
           </span>
