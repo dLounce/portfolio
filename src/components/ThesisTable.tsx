@@ -62,20 +62,32 @@ export default function ThesisTable() {
         </tbody>
       </table>
       </div>
-
-      <p className="mt-[11px] font-mono text-[11.5px] leading-[1.85] text-note">
-        SM: adapters trained on Qwen2.5-7B-Instruct. CM: adapters trained on the 7B base model and
-        measured against that base. Avg: plain averaging instead of TIES. CMAM: TIES over both CM
-        adapters and the instruction-tuning shift itself. Baseline is Qwen2.5-7B-Instruct with no
-        adapters.
+      <p className="mt-[8px] hidden font-mono text-[12px] text-note max-[560px]:block">
+        Scroll sideways for the sign conflict column →
       </p>
 
-      <p className="mt-[8px] font-mono text-[11.5px] leading-[1.85] text-note">
-        ★ = significantly different from baseline (diff &gt; 2×SE). SC-TIES gains 0.716 against a
-        0.713 baseline, which is <b className="font-medium text-ink">not</b> significant. The
-        significant result is +0.017 over SM-TIES, cross-method. Every merge variant loses GSM8K
-        against baseline, both proposed methods included. Distillation overwrites maths capability
-        before any merge happens (individual maths LoRA: 0.466 against 0.632).
+      <dl className="mt-[16px] grid grid-cols-[auto_1fr] gap-x-[16px] gap-y-[5px] font-mono text-[12.5px] leading-[1.65] text-note">
+        {[
+          ["Baseline", "Qwen2.5-7B-Instruct with no adapters."],
+          ["SM", "Adapters trained on Qwen2.5-7B-Instruct."],
+          ["CM", "Adapters trained on the 7B base model, measured against that base."],
+          ["Avg", "Plain averaging instead of TIES."],
+          ["CMAM", "TIES over both CM adapters and the instruction-tuning shift itself."],
+          ["★", "Differs from the baseline by more than 2×SE."],
+        ].map(([term, def]) => (
+          <div key={term} className="contents">
+            <dt className="text-ink">{term}</dt>
+            <dd>{def}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <p className="mt-[22px] max-w-text text-[16px] leading-[1.65] text-mute">
+        SC-TIES scores 0.716 against a 0.713 baseline, which is{" "}
+        <b className="font-bold text-ink">not</b> significant. The significant result is +0.017
+        over SM-TIES, a comparison between methods. Every merge variant loses GSM8K against the
+        baseline, both of mine included. Distillation had already cut maths before any merge
+        happened: the individual maths adapter scores 0.466 against 0.632.
       </p>
     </div>
   );

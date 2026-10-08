@@ -22,9 +22,9 @@ export default function ThesisGeometry() {
             <line x1="26" y1="130" x2="166" y2="56" className="stroke-accent" strokeWidth="1.5" markerEnd="url(#tg-acc)" />
             <circle cx="26" cy="130" r="2.5" className="fill-ink" />
             <text x="150" y="32" className="fill-note font-mono" fontSize="9">θ shared</text>
-            <text x="120" y="74" className="fill-accent font-mono" fontSize="9">τ₁, τ₂</text>
+            <text x="108" y="106" className="fill-accent font-mono" fontSize="9">τ₁, τ₂</text>
           </svg>
-          <p className="mt-[6px] font-mono text-[10.5px] leading-[1.5] text-note">
+          <p className="mt-[6px] font-mono text-[12px] leading-[1.55] text-note">
             Each task vector is the shared instruction-tuning shift plus a small residual, so both
             point almost the same way. <span className="text-body">Sign conflict 0.000.</span>
           </p>
@@ -47,13 +47,13 @@ export default function ThesisGeometry() {
             <text x="150" y="72" className="fill-accent font-mono" fontSize="9">r₁</text>
             <text x="88" y="28" className="fill-accent font-mono" fontSize="9">r₂</text>
           </svg>
-          <p className="mt-[6px] font-mono text-[10.5px] leading-[1.5] text-note">
+          <p className="mt-[6px] font-mono text-[12px] leading-[1.55] text-note">
             SC-TIES subtracts the shared shift first, then merges the residuals, which now disagree.{" "}
             <span className="text-body">Sign conflict 0.237.</span>
           </p>
         </div>
       </div>
-      <figcaption className="mt-[9px] font-mono text-[11px] leading-[1.7] text-note">
+      <figcaption className="mt-[9px] font-mono text-[12.5px] leading-[1.7] text-note">
         Why TIES behaved like averaging here: the instruction-tuning anchor dwarfs each LoRA signal,
         so sign election has almost nothing to arbitrate until the anchor is removed.
       </figcaption>

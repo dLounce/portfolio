@@ -2,6 +2,7 @@ import Sidebar from "@/components/Sidebar";
 import SentinelPanel from "@/components/SentinelPanel";
 import ProjectCards from "@/components/ProjectCards";
 import ThesisTable from "@/components/ThesisTable";
+import ExperienceTimeline from "@/components/ExperienceTimeline";
 import ThesisGeometry from "@/components/art/ThesisGeometry";
 import { SITE_URL } from "./site";
 
@@ -63,12 +64,12 @@ export default function Home() {
 
           <dl className="animate-rise mt-9 grid max-w-text grid-cols-2 gap-x-8 gap-y-5 border-t border-rule pt-6 min-[560px]:grid-cols-4 [animation-delay:250ms]">
             {[
-              ["66.0%", "deployed text-to-SQL execution accuracy"],
+              ["66.0%", <>deployed <span key="t" className="whitespace-nowrap">text-to-SQL</span> execution accuracy</>],
               ["4.4 GB", "served model, down from ~15 GB"],
               ["~12 s", "one measured request · EC2 CPU"],
               ["0 / 100", "unauthorised orders · 100 live attacks"],
             ].map(([v, k]) => (
-              <div key={k}>
+              <div key={v as string}>
                 <dt className="font-mono text-[22px] font-light tracking-[-0.01em] text-ink tabular-nums">
                   {v}
                 </dt>
@@ -117,14 +118,18 @@ export default function Home() {
         </section>
 
         <section id="projects">
-          <div className="mb-[26px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
+          <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             Projects
           </div>
+          <h2 className="mb-[26px] max-w-text text-[26px] font-light tracking-[-0.012em]">
+            Five projects, each written up with its results and its <em className="font-bold italic">limits</em>.
+          </h2>
           <ProjectCards />
 
-          <p className="mt-[24px] max-w-text font-mono text-[12px] leading-[1.9] text-note">
-            Stack – Python · PyTorch · Hugging Face · PEFT/LoRA · TRL/GRPO · LangGraph ·
-            FastAPI · llama.cpp · AWS EC2 · MLflow · CloudWatch · PM4Py · Docker · SQL
+          <p className="mt-[30px] max-w-text border-t border-hair pt-[18px] font-mono text-[12.5px] leading-[1.9] text-note">
+            <span className="text-ink">Stack</span> · Python · PyTorch · Hugging Face · PEFT/LoRA ·
+            TRL/GRPO · LangGraph · FastAPI · llama.cpp · AWS EC2 · MLflow · CloudWatch · PM4Py ·
+            Docker · SQL
           </p>
         </section>
 
@@ -161,66 +166,50 @@ export default function Home() {
 
           <ThesisTable />
 
-          <p className="mt-[26px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
-            Limits: this is one model family, a Qwen2.5-32B teacher and a 7B student, with two
-            domains, 5,000 samples each and one epoch of training. I didn&apos;t test other model
-            families, sizes or training lengths.
-          </p>
-
-          <p className="mt-[12px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
-            What I&apos;d do differently: I measured sign conflict only after the merge failed to
-            help. Instrumented from the first run, the diagnosis would have taken days instead of
-            weeks. I was watching the benchmark score when the zero was the louder signal.
-          </p>
-
-          <p className="mt-[12px] max-w-text font-mono text-[12px] leading-[1.85] text-note">
-            Notebooks and figures are in the{" "}
-            <a href="https://github.com/dLounce/KD-ties" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">KD-ties repo</a>,
-            and the four trained adapters are on{" "}
-            <a href="https://www.kaggle.com/datasets/rrishavrraj/all-new-lora" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">Kaggle</a>.
-            The thesis PDF is available on request.
-          </p>
+          <div className="mt-[40px] grid max-w-text gap-x-[40px] gap-y-[28px] border-t border-rule pt-[28px] min-[760px]:grid-cols-2">
+            <div>
+              <h3 className="mb-[9px] font-mono text-[12px] tracking-[0.16em] text-note uppercase">
+                Limits
+              </h3>
+              <p className="text-[15.5px] leading-[1.65] text-mute">
+                This is one model family: a Qwen2.5-32B teacher and a 7B student, two domains, 5,000
+                samples each and one epoch of training. I didn&apos;t test other model families,
+                sizes or training lengths.
+              </p>
+            </div>
+            <div>
+              <h3 className="mb-[9px] font-mono text-[12px] tracking-[0.16em] text-note uppercase">
+                What I&apos;d do differently
+              </h3>
+              <p className="text-[15.5px] leading-[1.65] text-mute">
+                I measured sign conflict only after the merge failed to help. Instrumented from the
+                first run, the diagnosis would have taken days instead of weeks. I was watching the
+                benchmark score when the zero was the louder signal.
+              </p>
+            </div>
+            <div className="min-[760px]:col-span-2">
+              <h3 className="mb-[9px] font-mono text-[12px] tracking-[0.16em] text-note uppercase">
+                Code and data
+              </h3>
+              <p className="text-[15.5px] leading-[1.65] text-mute">
+                Notebooks and figures are in the{" "}
+                <a href="https://github.com/dLounce/KD-ties" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">KD-ties repo</a>,
+                and the four trained adapters are on{" "}
+                <a href="https://www.kaggle.com/datasets/rrishavrraj/all-new-lora" target="_blank" rel="noreferrer" className="text-accent no-underline hover:underline">Kaggle</a>.
+                The thesis PDF is available on request.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section id="experience">
           <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
             Experience &amp; education
           </div>
-          <dl className="max-w-text">
-            {[
-              {
-                role: "Artificial Intelligence Intern",
-                org: "Ballistic Learning Systems",
-                when: "Jun–Jul 2025",
-                note: "Built an LLM short-answer grader and raised agreement with human graders from 44% to 71% on a 118-item benchmark.",
-              },
-              {
-                role: "M.Sc. Computer Science",
-                org: "Central University of Rajasthan",
-                when: "Jun 2026",
-                note: "CGPA 7.1/10. Thesis on task-vector merging under distillation (KD-TIES).",
-              },
-              {
-                role: "BCA",
-                org: "Patliputra University",
-                when: "2021",
-                note: "73%.",
-              },
-            ].map((r, i) => (
-              <div
-                key={r.role}
-                className={`grid grid-cols-[1fr_auto] items-baseline gap-x-4 gap-y-1 border-b border-hair py-[13px] ${i === 0 ? "border-t border-t-rule" : ""}`}
-              >
-                <dt className="text-[16px] text-ink">{r.role}</dt>
-                <span className="text-right font-mono text-[11.5px] tracking-[0.08em] text-note uppercase">
-                  {r.when}
-                </span>
-                <dd className="col-span-2 text-[14px] text-mute">
-                  <span className="text-body">{r.org}</span> – {r.note}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <h2 className="mb-[34px] max-w-text text-[26px] font-light tracking-[-0.012em]">
+            Where I&apos;ve worked and studied, <em className="font-bold italic">most recent</em> first.
+          </h2>
+          <ExperienceTimeline />
         </section>
 
         <section id="contact">

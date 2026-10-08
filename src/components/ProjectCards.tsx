@@ -85,18 +85,29 @@ const GITHUB_PATH =
 
 export default function ProjectCards() {
   return (
-    // an odd card count would orphan the last one at half width; it spans
-    // the full row instead. no effect once the count is even again.
-    <div className="grid grid-cols-2 gap-[18px] max-[900px]:grid-cols-1 [&>article:last-child:nth-child(odd)]:col-span-2 max-[900px]:[&>article:last-child:nth-child(odd)]:col-span-1">
-      {PROJECTS.map((p) => (
+    // an odd card count would orphan the last one at half width, so it spans
+    // the full row as a short horizontal card (image beside the text) rather
+    // than a tall image stretched across the whole column.
+    <div className="grid grid-cols-2 gap-[18px] max-[900px]:grid-cols-1">
+      {PROJECTS.map((p, i) => {
+        const wide = PROJECTS.length % 2 === 1 && i === PROJECTS.length - 1;
+        return (
         <article
           key={p.slug}
-          className="group relative flex flex-col overflow-hidden rounded-[6px] border border-rule bg-card transition-colors hover:border-note"
+          className={`group relative flex overflow-hidden rounded-[6px] border border-rule bg-card transition-colors hover:border-note ${
+            wide ? "col-span-2 flex-row max-[900px]:col-span-1 max-[900px]:flex-col" : "flex-col"
+          }`}
         >
           {/* the slug label is always painted and the artwork sits over it, so a
               card with neither an image nor a drawing shows a label rather than a
               grey void. */}
-          <div className="relative grid aspect-[16/10] place-items-center overflow-hidden border-b border-rule bg-paper">
+          <div
+            className={`relative grid aspect-[16/10] place-items-center overflow-hidden bg-paper ${
+              wide
+                ? "w-[40%] shrink-0 border-r border-rule max-[900px]:w-full max-[900px]:border-r-0 max-[900px]:border-b"
+                : "border-b border-rule"
+            }`}
+          >
             <span className="font-mono text-[11.5px] tracking-[0.14em] text-faint uppercase">
               {p.slug}
             </span>
@@ -114,9 +125,9 @@ export default function ProjectCards() {
             )}
           </div>
 
-          <div className="flex flex-1 flex-col p-[18px]">
+          <div className={`flex flex-1 flex-col p-[20px] ${wide ? "justify-center" : ""}`}>
             <div className="flex items-baseline justify-between gap-3">
-              <h3 className="text-[17px] font-bold tracking-[-0.01em]">
+              <h3 className="text-[18px] font-bold tracking-[-0.01em]">
                 <a
                   href={p.href}
                   className="text-inherit no-underline transition-colors group-hover:text-accent after:absolute after:inset-0 after:content-['']"
@@ -124,19 +135,19 @@ export default function ProjectCards() {
                   {p.title}
                 </a>
               </h3>
-              <span className="shrink-0 font-mono text-[10.5px] tracking-[0.12em] text-note uppercase">
+              <span className="shrink-0 font-mono text-[11.5px] tracking-[0.12em] text-note uppercase">
                 {p.badge}
               </span>
             </div>
 
-            <p className="mt-[7px] flex-1 text-[13.5px] leading-[1.6] text-mute">{p.hook}</p>
+            <p className="mt-[8px] flex-1 text-[14.5px] leading-[1.6] text-mute">{p.hook}</p>
 
-            <div className="mt-[14px] flex items-end justify-between gap-3">
-              <div>
+            <div className="mt-[16px] flex items-end justify-between gap-3">
+              <div className="flex flex-wrap gap-[6px]">
                 {p.tags.map((t) => (
                   <span
                     key={t}
-                    className="mr-[6px] border border-rule px-[6px] py-[2px] font-mono text-[10.5px] tracking-[0.1em] text-note uppercase"
+                    className="border border-rule px-[6px] py-[2px] font-mono text-[11px] tracking-[0.1em] whitespace-nowrap text-note uppercase"
                   >
                     {t}
                   </span>
@@ -163,7 +174,8 @@ export default function ProjectCards() {
             </div>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 }
