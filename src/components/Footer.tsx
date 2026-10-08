@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="ml-side border-t border-rule bg-card px-[46px] py-8 max-[900px]:ml-0 max-[900px]:px-[22px]">
       <div className="mx-auto flex max-w-col flex-wrap items-center justify-between gap-4 max-[900px]:max-w-none">
-        <span className="font-mono text-[12px] text-note">© 2026 Rishav Raj · Patna, India</span>
+        <span className="font-mono text-[12px] text-note">© 2026 Rishav Raj · Delhi, India</span>
         <nav className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-[12px]">
           {LINKS.map((l) => (
             <a

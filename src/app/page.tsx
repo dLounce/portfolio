@@ -14,8 +14,8 @@ const PERSON_LD = {
   email: "mailto:rrishavrraj@gmail.com",
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Patna",
-    addressRegion: "Bihar",
+    addressLocality: "Delhi",
+    addressRegion: "Delhi",
     addressCountry: "IN",
   },
   alumniOf: { "@type": "CollegeOrUniversity", name: "Central University of Rajasthan" },
@@ -130,7 +130,7 @@ export default function Home() {
 
         <section id="thesis">
           <div className="mb-[15px] font-mono text-[11.5px] tracking-[0.16em] text-note uppercase">
-            KD-TIES · M.Sc. thesis, June 2026
+            KD-TIES · M.Sc. thesis, Dec 2025–Jun 2026
           </div>
           <h2 className="mb-[9px] max-w-text text-[26px] font-light tracking-[-0.012em]">
             TIES merging quietly degenerates to <em className="font-bold italic">averaging</em>.
@@ -212,8 +212,8 @@ export default function Home() {
           </h2>
           <p className="mb-[32px] max-w-text text-[17px] text-mute">
             I&apos;m looking for AI/ML engineering roles in LLM deployment, evaluation, or agent
-            systems. I finished my M.Sc. in June 2026, I&apos;m based in Patna and open to
-            relocation, and available now. Email or LinkedIn both reach me.
+            systems. I finished my M.Sc. in June 2026, I&apos;m based in Delhi, and available
+            now. Email or LinkedIn both reach me.
           </p>
 
           <dl>
@@ -223,7 +223,7 @@ export default function Home() {
               { k: "GitHub", v: "github.com/dLounce", href: "https://github.com/dLounce" },
               { k: "Résumé", v: "Rishav_Resume.pdf", href: "/resume/Rishav_Resume.pdf" },
               { k: "Phone", v: "+91 97983 41208", href: "tel:+919798341208" },
-              { k: "Based in", v: "Patna, Bihar, India", href: null },
+              { k: "Based in", v: "Delhi, India", href: null },
             ].map((row, i) => (
               <div
                 key={row.k}

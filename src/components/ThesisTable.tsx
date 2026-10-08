@@ -9,7 +9,7 @@ type Row = {
 };
 
 const ROWS: Row[] = [
-  { method: "Baseline", mmlu: "0.713", hella: "0.786", gsm: "0.642", sign: "n/a", sig: [] },
+  { method: "Baseline", mmlu: "0.713", hella: "0.786", gsm: "0.632", sign: "n/a", sig: [] },
   { method: "SM-TIES", mmlu: "0.699", hella: "0.789", gsm: "0.490", sign: "0.221", sig: ["mmlu", "gsm"] },
   { method: "SM-Avg", mmlu: "0.696", hella: "0.787", gsm: "0.468", sign: "n/a", sig: ["mmlu", "gsm"] },
   { method: "CM-TIES", mmlu: "0.706", hella: "0.781", gsm: "0.480", sign: "0.000", sig: ["gsm"] },
@@ -68,7 +68,7 @@ export default function ThesisTable() {
         0.713 baseline, which is <b className="font-medium text-ink">not</b> significant. The
         significant result is +0.017 over SM-TIES, cross-method. Every merge variant loses GSM8K
         against baseline, both proposed methods included. Distillation overwrites maths capability
-        before any merge happens (individual maths LoRA: 0.466 against 0.642).
+        before any merge happens (individual maths LoRA: 0.466 against 0.632).
       </p>
     </div>
   );

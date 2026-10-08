@@ -3,7 +3,7 @@
 Personal portfolio and project write-ups for Rishav Raj, an AI/ML engineer working on LLM
 post-training, deployment, evaluation, and agent systems.
 
-Live: set the final alias/domain in `src/app/site.ts`.
+Live: https://ris7av.vercel.app (the origin is set in `src/app/site.ts`).
 
 ## Stack
 
