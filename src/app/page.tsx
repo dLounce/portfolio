@@ -3,6 +3,7 @@ import Sidebar from "@/components/Sidebar";
 import SentinelPanel from "@/components/SentinelPanel";
 import ProjectCards from "@/components/ProjectCards";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
+import ContactForm from "@/components/ContactForm";
 import { SITE_URL } from "./site";
 
 const PERSON_LD = {
@@ -201,11 +202,20 @@ export default function Home() {
             If you&apos;re hiring for LLM deployment, evaluation, or <em className="font-bold italic">agent
             systems</em>, I&apos;d like to hear about it.
           </h2>
-          <p className="mb-[32px] max-w-text text-[17px] text-mute">
+          <p className="mb-[28px] max-w-text text-[17px] text-mute">
             I&apos;m looking for AI/ML engineering roles in LLM deployment, evaluation, or agent
             systems. I finished my M.Sc. in June 2026, I&apos;m based in Delhi, and available
-            now. Email or LinkedIn both reach me.
+            now. Send a message here, or use any of the links below.
           </p>
+
+          <div className="max-w-text">
+            <ContactForm />
+          </div>
+
+          <h3 className="mt-[44px] mb-[14px] flex max-w-text items-center gap-[14px] font-mono text-[12px] tracking-[0.16em] text-note uppercase">
+            Or reach me directly
+            <span aria-hidden="true" className="h-px flex-1 bg-rule" />
+          </h3>
 
           <dl>
             {[

@@ -21,6 +21,7 @@ Live: https://ris7av.vercel.app (the origin is set in `src/app/site.ts`).
 - `/work/dgm4` — multimodal image–text manipulation detection
 - `/work/ballistic` — LLM short-answer grader (internship)
 - `/work/kd-ties` — M.Sc. thesis: TIES merging of distilled LoRA adapters
+- `/api/contact` — receives the contact form on the home page and emails it to me through Resend
 - `/sql-demo.html` — standalone Text-to-SQL sandbox (static page): a case-picker calling a
   query-only AWS Lambda, plus a free-text box that calls this app's own `/api/generate-sql`
   route, which proxies to the live EC2 generation endpoint
@@ -54,6 +55,15 @@ Live: https://ris7av.vercel.app (the origin is set in `src/app/site.ts`).
   itself as offline, which is accurate. The route's request/response shape is a placeholder
   (`{"question": "..."}` in, `{"sql": "..."}` out) — adjust `route.ts` to match the FastAPI
   proxy's real contract once confirmed.
+- `RESEND_API_KEY` — set this in the Vercel project's environment variables to turn the contact
+  form on. Until it is set, `/api/contact` reports "offline" and the form tells the visitor to
+  email me instead (with their message pre-filled in a `mailto:` link), so nothing is ever
+  silently dropped. Optional: `CONTACT_TO_EMAIL` (where messages go; defaults to the address on the
+  site) and `CONTACT_FROM` (defaults to Resend's shared test sender, which only delivers to the
+  address the Resend account was created with — set it once a domain is verified). The visitor's
+  address is set as Reply-To. Spam protection is a honeypot field, a minimum fill time and the
+  same kind of soft in-memory per-IP limit as below; validation rules are shared between the form
+  and the route in `src/lib/contact.ts`.
 - Rate limiting on `/api/generate-sql` is a best-effort, in-memory per-IP + daily counter. It
   resets on cold start and is not shared across serverless instances, so treat it as a soft
   limit rather than a hard guarantee. If this demo gets real traffic, back it with Vercel KV or
