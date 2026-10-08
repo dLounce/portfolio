@@ -221,7 +221,7 @@ export default function ContactForm() {
           {sending ? "Sending…" : "Send message"}
         </button>
         <p className="font-mono text-[12px] leading-[1.5] text-note">
-          Goes to my inbox. I reply from my own email.
+          Goes straight to my inbox.
         </p>
       </div>
 
